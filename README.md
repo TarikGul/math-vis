@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+# Welcome to this Math Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Tech
 
-## Available Scripts
+- React
+- Typescript
+- Three.js
 
-In the project directory, you can run:
+Why am I using React here? 
 
-### `yarn start`
+Really just because I want to practice more typescript with React, but also wanted to work on my math chops as I advance more and more into the Cryptographic Math world. But also because I wanted to show that you can use React along with heavy computational math, and visualize it while maintaining performance and integirty.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Im using three.js instead of plan WEBGL because of the readabiity and documentation with Three.js. Its a growing community, and I really like some of the tooling their API has to offer. That being said this is the first time im using it. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I am almost done with the Torus. I just need to finish working on understanding dynaminc data with a Object3D in Three.js. I have the lighting equation working in conjunction with my torus verticie equation, but I just cant seem to get a custom rotation working, so that I can update my lighting dynamically. 
 
-### `yarn test`
+Here are some pictures so far. Everything is adjustable, to the amount of verticies, to size, speed, and colors. Thats what i need to work on next is the console, and allow it to work in conjunction with the renderer. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Torus minimum lighting](./public/torus-lighting.png)
 
-### `yarn build`
+![Torus lighting](./public/torus-min-lighting.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Copy `tsconfig.json`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Delete `tsconfig.json`
 
-### `yarn eject`
+run `yarn start`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+paste old `tsconfig.json`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Unfortunately this is the only work around I know with the current CRA- Typescript bug. Currently is an issue with `typscript@4.0.3`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Torus
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The first completed shape and
