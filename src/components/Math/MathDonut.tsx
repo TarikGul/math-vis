@@ -65,7 +65,7 @@ const MathDonut = () => {
                     positions.push(x, y, z);
                     // color.setRGB(vx, vy, L);
                     color.setRGB(255, 255, L);
-                    // color.setHSL(0, 0, L);
+                    color.setHSL(0, 0, L);
 
                     colors.push(color.r, color.g, color.b);
                 }
@@ -96,7 +96,7 @@ const MathDonut = () => {
         //     geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
         //     geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
         // }, 1000)
-
+        geometry.center()
         points = new THREE.Points(geometry, material);
 
         points.frustumCulled = false;
@@ -110,25 +110,25 @@ const MathDonut = () => {
 
         renderer.render(scene, camera);
 
-        // let animate = function () {
-        //     requestAnimationFrame(animate);
-        //     render()
-        // };
+        let animate = function () {
+            requestAnimationFrame(animate);
+            render()
+        };
 
-        // function render() {
+        function render() {
 
-        //     // drawCount = (Math.max(5000, drawCount) + Math.floor(500 * Math.random())) % particles;
-        //     // points.geometry.setDrawRange(0, drawCount);
+            // drawCount = (Math.max(5000, drawCount) + Math.floor(500 * Math.random())) % particles;
+            // points.geometry.setDrawRange(0, drawCount);
 
-        //     const time = Date.now() * 0.001;
+            const time = Date.now() * 0.001;
 
-        //     points.rotation.x = time * 0.1;
-        //     points.rotation.y = time * 0.2;
+            points.rotation.x = time * 0.2;
+            points.rotation.y = time * 0.2;
 
-        //     renderer.render(scene, camera);
+            renderer.render(scene, camera);
 
-        // }
-        // animate();
+        }
+        animate();
 
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
