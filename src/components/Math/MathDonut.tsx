@@ -42,10 +42,10 @@ const MathDonut = () => {
                 cB = Math.cos(B), sB = Math.sin(B);
     
     
-            for (let j = 0; j < 6.28; j += 0.3) {
+            for (let j = 0; j < 6.28; j += 0.1) {
                 let ct = Math.cos(j), st = Math.sin(j);
     
-                for (let i = 0; i < 6.28; i += 0.1) {
+                for (let i = 0; i < 6.28; i += 0.03) {
                     let sp = Math.sin(i), cp = Math.cos(i);
                     let ox = R2 + R1 + ct,
                         oy = R1 * st;
@@ -54,16 +54,20 @@ const MathDonut = () => {
                     let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
                     let z = (K2 + cA * ox * sp + sA * oy)
                     let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
-                        const vx = (x / n) + 0.5;
-                        const vy = (y / n) + 0.5;
-                        const vz = (z / n) + 0.5;
-    
-                        positions.push(x, y, z);
-                        // color.setRGB(vx, vy, L);
-                        color.setRGB(255, 255, L);
-                        color.setHSL(0, 0, L);
-    
-                        colors.push(color.r, color.g, color.b);
+
+                    // If we want to make the vertices colorful.
+                    // But in this specific case we are not because we 
+                    // want to capture correct lighting
+                    const vx = (x / n) + 0.5;
+                    const vy = (y / n) + 0.5;
+                    const vz = (z / n) + 0.5;
+
+                    positions.push(x, y, z);
+                    // color.setRGB(vx, vy, L);
+                    color.setRGB(255, 255, L);
+                    // color.setHSL(0, 0, L);
+
+                    colors.push(color.r, color.g, color.b);
                 }
             }
             console.log(A, B)
@@ -78,20 +82,20 @@ const MathDonut = () => {
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
         geometry.computeBoundingSphere();
 
-        const material = new THREE.PointsMaterial({ size: 0.05, vertexColors: true });
+        const material = new THREE.PointsMaterial({ size: 0.04, vertexColors: true });
 
         // setInterval(function() {
         //     A += 0.07;
         //     B += 0.03;
 
-        //     const attr   = geometry.getAttribute('position');
+        //     // geometry.deleteAttribute('position');
         //     const result = calculateTorus();
         //     const newPositions = result[0];
         //     const newColors = result[1];
-
+            
         //     geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
         //     geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
-        // }, 3000)
+        // }, 1000)
 
         points = new THREE.Points(geometry, material);
 
