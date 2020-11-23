@@ -34,4 +34,6 @@ Unfortunately this is the only work around I know with the current CRA- Typescri
 
 ## Torus
 
-The first completed shape and
+The first completed shape 
+
+Console controls for the Torus need to be finished, and the state management for the console.
