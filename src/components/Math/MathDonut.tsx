@@ -3,9 +3,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import * as THREE from 'three';
 
 const MathDonut = () => {
+    // Add interface type
     const [toggle, setToggle] = useState(true);
 
-    const R1 = 1, R2 = 2, K1 = 150, K2 = 7;
+    const R1: number = 1, 
+          R2: number = 2, 
+          K1: number = 150, 
+          K2: number = 7;
 
     const ctxRef = useRef<HTMLHeadingElement>(null);
 
@@ -16,12 +20,12 @@ const MathDonut = () => {
     const initViewport = () => {
         let camera: any, scene: any, renderer: any, points: any, drawCount: any;
 
-        let A = 1;
-        let B = 1;
+        let A: number = 1;
+        let B: number = 1;
 
         // Init the scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x050505);
+        scene.background = new THREE.Color(0xC4C4C4);
         // scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
         // Setup camera -> Canvas
