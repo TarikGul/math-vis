@@ -74,7 +74,7 @@ const MathDonut = () => {
                     colors.push(color.r, color.g, color.b);
                 }
             }
-            console.log(A, B)
+
             return [positions, colors];
         }
 
@@ -88,18 +88,6 @@ const MathDonut = () => {
 
         const material = new THREE.PointsMaterial({ size: 0.04, vertexColors: true });
 
-        // setInterval(function() {
-        //     A += 0.07;
-        //     B += 0.03;
-
-        //     // geometry.deleteAttribute('position');
-        //     const result = calculateTorus();
-        //     const newPositions = result[0];
-        //     const newColors = result[1];
-            
-        //     geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
-        //     geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
-        // }, 1000)
         geometry.center()
         points = new THREE.Points(geometry, material);
 
@@ -112,7 +100,7 @@ const MathDonut = () => {
 
         document.body.appendChild(renderer.domElement);
 
-        renderer.render(scene, camera);
+        // renderer.render(scene, camera);
 
         let animate = function () {
             requestAnimationFrame(animate);
@@ -121,13 +109,18 @@ const MathDonut = () => {
 
         function render() {
 
-            // drawCount = (Math.max(5000, drawCount) + Math.floor(500 * Math.random())) % particles;
-            // points.geometry.setDrawRange(0, drawCount);
+            setInterval(function () {
+                A += 0.0007;
+                B += 0.0003;
 
-            const time = Date.now() * 0.001;
+                // geometry.deleteAttribute('position');
+                const result = calculateTorus();
+                const newPositions = result[0];
+                const newColors = result[1];
 
-            points.rotation.x = time * 0.2;
-            points.rotation.y = time * 0.2;
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
+            }, 50)
 
             renderer.render(scene, camera);
 
