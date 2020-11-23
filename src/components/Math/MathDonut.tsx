@@ -1,12 +1,11 @@
+import { render } from '@testing-library/react';
 import React, { useEffect, useState, useRef } from 'react';
 import * as THREE from 'three';
 
 const MathDonut = () => {
     const [toggle, setToggle] = useState(true);
 
-    const R1 = 1, R2 = 2, K1 = 150, K2 = 6;
-    const [A, setA] = useState(1);
-    const [B, setB] = useState(1);
+    const R1 = 1, R2 = 2, K1 = 150, K2 = 7;
 
     const ctxRef = useRef<HTMLHeadingElement>(null);
 
@@ -15,12 +14,15 @@ const MathDonut = () => {
     }, []);
 
     const initViewport = () => {
-        let camera: any, scene: any, renderer: any, points: any;
+        let camera: any, scene: any, renderer: any, points: any, drawCount: any;
+
+        let A = 1;
+        let B = 1;
 
         // Init the scene
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x050505);
-        scene.fog = new THREE.Fog(0x050505, 2000, 3500);
+        // scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
         // Setup camera -> Canvas
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,43 +30,49 @@ const MathDonut = () => {
 
         const geometry = new THREE.BufferGeometry();
 
-        // positions for the buffer
-        const positions = [];
-        const colors    = [];
-        const color     = new THREE.Color();
-
-        const n = 1000, n2 = n / 2;  
-
-        let cA = Math.cos(A), sA = Math.sin(A),
-            cB = Math.cos(B), sB = Math.sin(B);
-
-        for (let j = 0; j < 6.28; j += 0.3) {
-            let ct = Math.cos(j), st = Math.sin(j);
-
-            for (let i = 0; i < 6.28; i += 0.1) {
-                let sp = Math.sin(i), cp = Math.cos(i);
-                let ox = R2 + R1 + ct,
-                    oy = R1 * st;
-                
-                let x = ox * (cB * cp + sA * sB * sp) - oy * cA * sB; // final 3D x coordinate
-                let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
-                let z = (K2 + cA * ox * sp + sA * oy)
-                let ooz = 1 / z; // one over z
-                let xp = (150 + K1 * ooz * x); // x' = screen space coordinate, translated and scaled to fit our 320x240 canvas element
-                let yp = (120 - K1 * ooz * y); // y' (it's negative here because in our output, positive y goes down but in our 3D space, positive y goes up)
-                let L = 0.7 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
-                    const vx = (x / n) + 0.5;
-                    const vy = (y / n) + 0.5;
-                    const vz = (z / n) + 0.5;
-
-                    positions.push(x, y, z);
-                    color.setRGB(255, 255, L);
-                    color.setHSL(0, 0, L);
-                    // color.lerpHSL(color, L);
-
-                    colors.push(color.r, color.g, color.b);
+        const calculateTorus = () => {
+            // positions for the buffer
+            const positions = [];
+            const colors    = [];
+            const color     = new THREE.Color();
+    
+            const n = 1000, n2 = n / 2;  
+    
+            let cA = Math.cos(A), sA = Math.sin(A),
+                cB = Math.cos(B), sB = Math.sin(B);
+    
+    
+            for (let j = 0; j < 6.28; j += 0.3) {
+                let ct = Math.cos(j), st = Math.sin(j);
+    
+                for (let i = 0; i < 6.28; i += 0.1) {
+                    let sp = Math.sin(i), cp = Math.cos(i);
+                    let ox = R2 + R1 + ct,
+                        oy = R1 * st;
+                    
+                    let x = ox * (cB * cp + sA * sB * sp) - oy * cA * sB; // final 3D x coordinate
+                    let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
+                    let z = (K2 + cA * ox * sp + sA * oy)
+                    let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
+                        const vx = (x / n) + 0.5;
+                        const vy = (y / n) + 0.5;
+                        const vz = (z / n) + 0.5;
+    
+                        positions.push(x, y, z);
+                        // color.setRGB(vx, vy, L);
+                        color.setRGB(255, 255, L);
+                        color.setHSL(0, 0, L);
+    
+                        colors.push(color.r, color.g, color.b);
+                }
             }
+            console.log(A, B)
+            return [positions, colors];
         }
+
+        const torus = calculateTorus();
+        const positions = torus[0];
+        const colors = torus[1];
 
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -72,16 +80,51 @@ const MathDonut = () => {
 
         const material = new THREE.PointsMaterial({ size: 0.05, vertexColors: true });
 
+        // setInterval(function() {
+        //     A += 0.07;
+        //     B += 0.03;
+
+        //     const attr   = geometry.getAttribute('position');
+        //     const result = calculateTorus();
+        //     const newPositions = result[0];
+        //     const newColors = result[1];
+
+        //     geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+        //     geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
+        // }, 3000)
+
         points = new THREE.Points(geometry, material);
+
+        points.frustumCulled = false;
         scene.add(points);
 
-        renderer = new THREE.WebGLRenderer();
+        renderer = new THREE.WebGLRenderer({ antialias: false });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
 
         renderer.render(scene, camera);
+
+        // let animate = function () {
+        //     requestAnimationFrame(animate);
+        //     render()
+        // };
+
+        // function render() {
+
+        //     // drawCount = (Math.max(5000, drawCount) + Math.floor(500 * Math.random())) % particles;
+        //     // points.geometry.setDrawRange(0, drawCount);
+
+        //     const time = Date.now() * 0.001;
+
+        //     points.rotation.x = time * 0.1;
+        //     points.rotation.y = time * 0.2;
+
+        //     renderer.render(scene, camera);
+
+        // }
+        // animate();
 
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
