@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
 export function disposeNode(node) {
-    debugger
     if (node instanceof THREE.Mesh) {
         if (node.geometry) {
             node.geometry.dispose();
