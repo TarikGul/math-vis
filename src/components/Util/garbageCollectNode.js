@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import $ from 'jquery';
 export function disposeNode(node) {
     if (node instanceof THREE.Mesh) {
         if (node.geometry) {
@@ -8,7 +8,7 @@ export function disposeNode(node) {
 
         if (node.material) {
             if (node.material instanceof THREE.MeshFaceMaterial) {
-                document.each(node.material.materials, function (idx, mtrl) {
+                $.each(node.material.materials, function (idx, mtrl) {
                     if (mtrl.map) mtrl.map.dispose();
                     if (mtrl.lightMap) mtrl.lightMap.dispose();
                     if (mtrl.bumpMap) mtrl.bumpMap.dispose();
@@ -40,7 +40,6 @@ export function disposeNode(node) {
                 if (node.material.gradientMap) node.material.gradientMap.dispose();
                 if (node.material.metalnessMap) node.material.metalnessMap.dispose();
                 if (node.material.roughnessMap) node.material.roughnessMap.dispose();
-
                 node.material.dispose();   // disposes any programs associated with the material
             }
         }
