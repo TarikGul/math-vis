@@ -1,10 +1,7 @@
-import { render } from '@testing-library/react';
 import React, { useEffect, useState, useRef } from 'react';
 import * as THREE from 'three';
 
-const MathDonut = () => {
-    // Add interface type
-    const [toggle, setToggle] = useState(true);
+const MathDonut = (props: { active: boolean }) => {
 
     const R1: number = 1, 
           R2: number = 2, 
@@ -14,8 +11,10 @@ const MathDonut = () => {
     const ctxRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
-        initViewport();
-    }, []);
+        if (props.active) {
+            initViewport();
+        }
+    }, [props.active]);
 
     const initViewport = () => {
         let camera: any, scene: any, renderer: any, points: any, drawCount: any;
