@@ -1,23 +1,42 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as THREE from 'three';
+import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDonut = (props: { active: boolean }) => {
+    // let intervalId: any;
 
     const R1: number = 1, 
           R2: number = 2, 
           K1: number = 150, 
           K2: number = 7;
 
-    const ctxRef = useRef<HTMLHeadingElement>(null);
+    const reqRef = useRef<any>();
+    const ctxRef = useRef<HTMLHeadingElement | null>(null);
+    const sceRef = useRef<THREE.Scene>(new THREE.Scene());
+    const camRef = useRef<THREE.PerspectiveCamera>(
+        new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    );
+    const renRef = useRef<THREE.WebGLRenderer>(
+        new THREE.WebGLRenderer({ antialias: true })
+    );
+
+    const [isOpened, setIsOpened] = useState<boolean>(false)
 
     useEffect(() => {
         if (props.active) {
+            setIsOpened(true)
             initViewport();
+        } else {
+            cancelVis();
         }
     }, [props.active]);
 
     const initViewport = () => {
-        let camera: any, scene: any, renderer: any, points: any, drawCount: any;
+        let camera: any = ctxRef.current, 
+            scene: any = sceRef.current, 
+            renderer: any = renRef.current, 
+            points: any, 
+            drawCount: any;
 
         let A: number = 1;
         let B: number = 1;
@@ -45,7 +64,7 @@ const MathDonut = (props: { active: boolean }) => {
                 cB = Math.cos(B), sB = Math.sin(B);
     
     
-            for (let j = 0; j < 6.28; j += 0.1) {
+            for (let j = 0; j < 6.28; j += 0.2) {
                 let ct = Math.cos(j), st = Math.sin(j);
     
                 for (let i = 0; i < 6.28; i += 0.03) {
@@ -108,7 +127,7 @@ const MathDonut = (props: { active: boolean }) => {
 
         function render() {
 
-            setInterval(function () {
+            let intervalId = setInterval(() => {
                 A += 0.0007;
                 B += 0.0003;
 
@@ -123,6 +142,7 @@ const MathDonut = (props: { active: boolean }) => {
 
             renderer.render(scene, camera);
 
+            return () => clearInterval(intervalId)
         }
         animate();
 
@@ -132,6 +152,26 @@ const MathDonut = (props: { active: boolean }) => {
 
             camera.updateProjectionMatrix();
         })
+    }
+
+    const cancelVis = () => {
+        if (isOpened) {
+            // Stop requestAnimationFrame
+            cancelAnimationFrame(reqRef.current);
+
+            // Garbage Collection
+            disposeHierarchy(sceRef.current, disposeNode);
+
+            // Retrieve HtmlCollection of canvas's
+            let canvas = document.getElementsByTagName('CANVAS')
+
+            // Remove all canvas elements
+            for(let i = 0; i < canvas.length; i++) {
+                canvas[0].remove();
+            }
+
+            setIsOpened(false);
+        }
     }
 
     return (
