@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 const MathDefaultBox = (props: { active: boolean }) => {
+    let id: any;
 
     const ctxRef = useRef<HTMLHeadingElement>(null);
+    const reqRef = useRef<any>();
 
     useEffect(() => {
         if (props.active) {
@@ -36,8 +38,8 @@ const MathDefaultBox = (props: { active: boolean }) => {
         scene.add(cube);
         camera.position.z = 5;
 
-        let animate = function () {
-            requestAnimationFrame(animate);
+        let animate = () => {
+            reqRef.current = requestAnimationFrame(animate);
             cube.rotation.x += 0.01;
             cube.rotation.y += 0.01;
             renderer.render(scene, camera);
@@ -46,10 +48,8 @@ const MathDefaultBox = (props: { active: boolean }) => {
     }
 
     const cancelVis = () => {
-        
+        cancelAnimationFrame(reqRef.current);
     }
-
-    cancelVis.bind(initViewPort);
 
     return (
         <div ref={ctxRef}>
