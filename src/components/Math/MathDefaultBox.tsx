@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react';
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
@@ -61,10 +60,19 @@ const MathDefaultBox = (props: { active: boolean }) => {
     }
 
     const cancelVis = () => {
+        // Stop requestAnimationFrame
         cancelAnimationFrame(reqRef.current);
+
+        // Garbage Collection
         disposeHierarchy(sceRef.current, disposeNode);
+
+        // Retrieve HtmlCollection of canvas's
         let canvas = document.getElementsByTagName('CANVAS')
-        canvas[0].remove();
+
+        // Remove all canvas elements
+        for (let i = 0; i < canvas.length; i++) {
+            canvas[0].remove();
+        }
     }
 
     return (
