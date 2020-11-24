@@ -3,19 +3,31 @@ import * as THREE from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDonut = (props: { active: boolean }) => {
-    // let intervalId: any;
+    let intervalId: any;
+
+    let A: number = 1;
+    let B: number = 1;
 
     const R1: number = 1, 
           R2: number = 2, 
           K1: number = 150, 
           K2: number = 7;
 
+    // Geometry buffer ref
+    const geoRef = useRef<any>();
+    // Request animation ref
     const reqRef = useRef<any>();
+    // Points ref
+    const poiRef = useRef<any>();
+    // Context ref 
     const ctxRef = useRef<HTMLHeadingElement | null>(null);
+    // Scene ref
     const sceRef = useRef<THREE.Scene>(new THREE.Scene());
+    // Camera ref
     const camRef = useRef<THREE.PerspectiveCamera>(
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
     );
+    // Renderer ref
     const renRef = useRef<THREE.WebGLRenderer>(
         new THREE.WebGLRenderer({ antialias: true })
     );
@@ -31,15 +43,59 @@ const MathDonut = (props: { active: boolean }) => {
         }
     }, [props.active]);
 
+    const calculateTorus = () => {
+        // positions for the buffer
+        const positions = [];
+        const colors = [];
+        const color = new THREE.Color();
+
+        const n = 1000, n2 = n / 2;
+
+        let cA = Math.cos(A), sA = Math.sin(A),
+            cB = Math.cos(B), sB = Math.sin(B);
+
+
+        for (let j = 0; j < 6.28; j += 0.2) {
+            let ct = Math.cos(j), st = Math.sin(j);
+
+            for (let i = 0; i < 6.28; i += 0.03) {
+                let sp = Math.sin(i), cp = Math.cos(i);
+                let ox = R2 + R1 + ct,
+                    oy = R1 * st;
+
+                let x = ox * (cB * cp + sA * sB * sp) - oy * cA * sB; // final 3D x coordinate
+                let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
+                let z = (K2 + cA * ox * sp + sA * oy)
+                let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
+
+                // If we want to make the vertices colorful.
+                // But in this specific case we are not because we 
+                // want to capture correct lighting
+                const vx = (x / n) + 0.5;
+                const vy = (y / n) + 0.5;
+                const vz = (z / n) + 0.5;
+
+                positions.push(x, y, z);
+                // color.setRGB(vx, vy, L);
+                color.setRGB(255, 255, L);
+                color.setHSL(0, 0, L);
+
+                colors.push(color.r, color.g, color.b);
+            }
+        }
+
+        return [positions, colors];
+    }
+
     const initViewport = () => {
-        let camera: any = ctxRef.current, 
+        let camera: any = camRef.current, 
             scene: any = sceRef.current, 
             renderer: any = renRef.current, 
             points: any, 
             drawCount: any;
 
-        let A: number = 1;
-        let B: number = 1;
+        // let A: number = 1;
+        // let B: number = 1;
 
         // Init the scene
         scene = new THREE.Scene();
@@ -52,50 +108,6 @@ const MathDonut = (props: { active: boolean }) => {
 
         const geometry = new THREE.BufferGeometry();
 
-        const calculateTorus = () => {
-            // positions for the buffer
-            const positions = [];
-            const colors    = [];
-            const color     = new THREE.Color();
-    
-            const n = 1000, n2 = n / 2;  
-    
-            let cA = Math.cos(A), sA = Math.sin(A),
-                cB = Math.cos(B), sB = Math.sin(B);
-    
-    
-            for (let j = 0; j < 6.28; j += 0.2) {
-                let ct = Math.cos(j), st = Math.sin(j);
-    
-                for (let i = 0; i < 6.28; i += 0.03) {
-                    let sp = Math.sin(i), cp = Math.cos(i);
-                    let ox = R2 + R1 + ct,
-                        oy = R1 * st;
-                    
-                    let x = ox * (cB * cp + sA * sB * sp) - oy * cA * sB; // final 3D x coordinate
-                    let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
-                    let z = (K2 + cA * ox * sp + sA * oy)
-                    let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
-
-                    // If we want to make the vertices colorful.
-                    // But in this specific case we are not because we 
-                    // want to capture correct lighting
-                    const vx = (x / n) + 0.5;
-                    const vy = (y / n) + 0.5;
-                    const vz = (z / n) + 0.5;
-
-                    positions.push(x, y, z);
-                    // color.setRGB(vx, vy, L);
-                    color.setRGB(255, 255, L);
-                    color.setHSL(0, 0, L);
-
-                    colors.push(color.r, color.g, color.b);
-                }
-            }
-
-            return [positions, colors];
-        }
-
         const torus = calculateTorus();
         const positions = torus[0];
         const colors = torus[1];
@@ -107,9 +119,13 @@ const MathDonut = (props: { active: boolean }) => {
         const material = new THREE.PointsMaterial({ size: 0.04, vertexColors: true });
 
         geometry.center()
+
+        geoRef.current = geometry;
+
         points = new THREE.Points(geometry, material);
 
         points.frustumCulled = false;
+        poiRef.current = points;
         scene.add(points);
 
         renderer = new THREE.WebGLRenderer({ antialias: false });
@@ -126,26 +142,21 @@ const MathDonut = (props: { active: boolean }) => {
         };
 
         function render() {
+            A += 0.007;
+            B += 0.003;
 
-            let intervalId = setInterval(() => {
-                A += 0.0007;
-                B += 0.0003;
-
-                // geometry.deleteAttribute('position');
-                const result = calculateTorus();
-                const newPositions = result[0];
-                const newColors = result[1];
-
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
-                geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
-            }, 50)
+            const result = calculateTorus();
+            const newPositions = result[0];
+            const newColors = result[1];
+            
+            // geometry.deleteAttribute('position');
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
 
             renderer.render(scene, camera);
-
-            return () => clearInterval(intervalId)
         }
         animate();
-
+        console.log('outsideRender', intervalId)
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -161,6 +172,12 @@ const MathDonut = (props: { active: boolean }) => {
 
             // Garbage Collection
             disposeHierarchy(sceRef.current, disposeNode);
+
+            // Renderer cleanup
+            renRef.current.dispose();
+
+            // Remove scene
+            sceRef.current.remove(poiRef.current)
 
             // Retrieve HtmlCollection of canvas's
             let canvas = document.getElementsByTagName('CANVAS')

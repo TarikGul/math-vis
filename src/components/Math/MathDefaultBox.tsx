@@ -4,7 +4,6 @@ import { Scene } from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDefaultBox = (props: { active: boolean }) => {
-    let id: any;
 
     const reqRef = useRef<any>();
     const cubRef = useRef<any>();
@@ -70,6 +69,10 @@ const MathDefaultBox = (props: { active: boolean }) => {
         // Garbage Collection
         disposeHierarchy(sceRef.current, disposeNode);
 
+        // Renderer cleanup
+        renRef.current.dispose();
+
+        // Remove the current scene
         sceRef.current.remove(cubRef.current)
 
         // Retrieve HtmlCollection of canvas's
