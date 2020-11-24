@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { Scene } from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDefaultBox = (props: { active: boolean }) => {
     let id: any;
 
     const reqRef = useRef<any>();
+    const cubRef = useRef<any>();
     const ctxRef = useRef<HTMLHeadingElement | null>(null);
     const sceRef = useRef<THREE.Scene>(new THREE.Scene());
     const camRef = useRef<THREE.PerspectiveCamera>(
@@ -46,9 +48,11 @@ const MathDefaultBox = (props: { active: boolean }) => {
         scene.add(cube);
         camera.position.z = 5;
 
+        cubRef.current = cube;
         sceRef.current = scene;
         camRef.current = camera;
         renRef.current = renderer;
+
 
         let animate = () : void => {
             reqRef.current = requestAnimationFrame(animate);
@@ -65,6 +69,8 @@ const MathDefaultBox = (props: { active: boolean }) => {
 
         // Garbage Collection
         disposeHierarchy(sceRef.current, disposeNode);
+
+        sceRef.current.remove(cubRef.current)
 
         // Retrieve HtmlCollection of canvas's
         let canvas = document.getElementsByTagName('CANVAS')
