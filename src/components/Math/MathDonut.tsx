@@ -45,8 +45,8 @@ const MathDonut = (props: { active: boolean }) => {
 
     const calculateTorus = () => {
         // positions for the buffer
-        const positions = [];
-        const colors = [];
+        const positions: number[] = [];
+        const colors   :    any[] = [];
         const color = new THREE.Color();
 
         const n = 1000, n2 = n / 2;
@@ -156,7 +156,7 @@ const MathDonut = (props: { active: boolean }) => {
             renderer.render(scene, camera);
         }
         animate();
-        console.log('outsideRender', intervalId)
+
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
