@@ -12,8 +12,6 @@ Really just because I want to practice more typescript with React, but also want
 
 Im using three.js instead of plan WEBGL because of the readabiity and documentation with Three.js. Its a growing community, and I really like some of the tooling their API has to offer. That being said this is the first time im using it. 
 
-I am almost done with the Torus. I just need to finish working on understanding dynaminc data with a Object3D in Three.js. I have the lighting equation working in conjunction with my torus verticie equation, but I just cant seem to get a custom rotation working, so that I can update my lighting dynamically. 
-
 Here are some pictures so far. Everything is adjustable, to the amount of verticies, to size, speed, and colors. Thats what i need to work on next is the console, and allow it to work in conjunction with the renderer. 
 
 ![Torus minimum lighting](./public/torus-lighting.png)
@@ -34,6 +32,18 @@ Unfortunately this is the only work around I know with the current CRA- Typescri
 
 ## Torus
 
+TODO Need to post the math used for this, and the references I used
+
 The first completed shape 
 
-Console controls for the Torus need to be finished, and the state management for the console.
+## Mandelbulb
+
+Currently working on it. 
+
+## Notes
+
+All memory leaks associated with Three.js is taken care of. The last thing
+That needs to get done in regards to the garbage collection is, before switching
+visualizations i need to make a promise that will only render the next Object3D if
+garbage collection is complete and finished, or else there will be a shader typeerror
+that occurs. 
