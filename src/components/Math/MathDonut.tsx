@@ -112,6 +112,8 @@ const MathDonut = (props: { active: boolean }) => {
         const positions = torus[0];
         const colors = torus[1];
 
+        // We initialize the first set of points and Alphas for the positions
+        // We then update the points every animationFrame with updated lighting and points
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
         geometry.computeBoundingSphere();
@@ -133,8 +135,6 @@ const MathDonut = (props: { active: boolean }) => {
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
-
-        // renderer.render(scene, camera);
 
         let animate = function () {
             requestAnimationFrame(animate);
