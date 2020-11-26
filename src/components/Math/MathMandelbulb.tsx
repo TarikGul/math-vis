@@ -39,6 +39,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
 
     useEffect(() => {
         if (props.active) {
+            setIsOpened(true);
             initViewport();
         } else {
             cancelVis();
@@ -95,7 +96,9 @@ const MathMandelbulb = (props: { active: boolean }) => {
         let camera  : any = camRef.current,
             scene   : any = sceRef.current,
             renderer: any = renRef.current,
-            points  : any;
+            result  : any,
+            points  : any,
+            w       : number[];
         
         let positions: number[] = [];
         let colors   :    any[] = [];
@@ -109,16 +112,9 @@ const MathMandelbulb = (props: { active: boolean }) => {
         
         const geometry = new THREE.BufferGeometry();
 
-        let w = [-1.6905239445560225, 1.2500000000000002, -0.5168450375912946];
+        w = [-1.6905239445560225, 1.2500000000000002, -0.5168450375912946];
 
-        // for(let i = 0; i < ITERATIONS; i++) {
-            let result: any = calculateMandlebulb(w);
-
-            // Push to positions, which will be used in BufferGeometry
-            // positions.push(result[0], result[1], result[2])
-
-            // setNewVector(w, result);
-        // }
+        result = calculateMandlebulb(w);
 
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(result[0], 3));
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(result[1], 3))
