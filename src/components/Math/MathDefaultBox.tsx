@@ -30,6 +30,7 @@ const MathDefaultBox = (props: { active: boolean }) => {
         let scene = sceRef.current;
         let camera = camRef.current;
         let renderer = renRef.current;
+        // Hard coded Cube route to create lines. 
         let squarePos: number[] = [
             0, 0, 1, 0, 1, 1, 1, 1, 1,
             1, 0, 1, 1, 0, 0, 1, 1, 0, 
