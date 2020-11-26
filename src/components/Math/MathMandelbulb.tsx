@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 /**
  * 
@@ -11,10 +12,9 @@ import * as THREE from 'three';
 
 const MathMandelbulb = (props: { active: boolean }) => {
 
-    const ITERATIONS    : number = 20.0;
-    const POWER         : number =    8;
-
-    let z: number[] = [0.0, 0.0, 0.0];
+    const ITERATIONS    : number =  200.0;
+    const POWER         : number =    8.0;
+    const DEPTH_OF_FIELD: number =   25.0;
 
     // Geometry buffer ref
     const geoRef = useRef<any>();
@@ -38,68 +38,190 @@ const MathMandelbulb = (props: { active: boolean }) => {
     const [isOpened, setIsOpened] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log(calculateMandlebulb([0.1, 0.1, 0.1]))
         if (props.active) {
             initViewport();
         } else {
-            // console.log(calculateMandlebulb([0, 0, 0]))
+            cancelVis();
         }
-    }, []);
+    }, [props.active]);
 
     const calculateMandlebulb = (pos: number[]) => {
-        let x    : number, 
-            y    : number, 
-            z    : number, 
-            r    : number, 
-            phi  : number, 
-            theta: number;
-        
-        x = pos[0];
-        y = pos[1];
-        z = pos[2];
+        const color = new THREE.Color();
 
-        // Trigonomic Execution of the next point in the mandelbulb
+        let sinTheta : number,
+            theta    : number,
+            phi      : number,
+            zr       : number,   
+            dr       : number,
+            r        : number,
+            z        : number[] = [0.0, 0.0, 0.0],
+            positions: number[] = [],
+            colors   :    any[] = [];
 
-        // Polar Coordinates
-        r     = Math.sqrt((x**2 + y**2 + x**2));
-        theta = Math.acos(y/r);
-        phi   = Math.atan(x/z);
+        // Update Z
+        setTo(z, pos);
 
-        // Scale and rotate the point
-        r     = Math.pow(r, POWER);
-        theta = Math.pow(theta, POWER);
-        phi   = Math.pow(phi, POWER);
 
-        // convert back to cartesian coordinates
-        x = r * Math.sin(theta) * Math.sin(phi);
-        y = r * Math.cos(theta);
-        z = r * Math.sin(theta) * Math.cos(phi);
+        dr = 1.0;
+        r  = 0.0;
+        for (let i = 0; i < ITERATIONS; i++) {
+            r = length(z);
 
-        return [x, y, z] 
+            if (r > DEPTH_OF_FIELD) break;
+
+            theta    = Math.acos(z[2] / r);
+            phi      = Math.atan2(z[1], z[0]);
+            dr       = Math.pow(r, POWER - 1.0) * POWER * dr + 1.0;
+            zr       = Math.pow(r, POWER);
+            theta    = theta * POWER;
+            phi      = phi * POWER;
+            sinTheta = Math.sin(theta);
+            z[0]     = sinTheta * Math.cos(phi);
+            z[1]     = Math.sin(phi) * sinTheta;
+            z[2]     = Math.cos(theta);
+
+            positions.push(z[0], z[1], z[2]);
+
+            Math.floor(Math.random() * Math.floor(255));
+
+            color.setRGB(0, 0, 0);
+            colors.push(color.r, color.g, color.b);
+        }
+        // return 0.5 * Math.log(r) * r / dr;
+        return [positions, colors];
     }
 
     const initViewport = () => {
-        let camera: any = camRef.current,
-            scene: any = sceRef.current,
+        let camera  : any = camRef.current,
+            scene   : any = sceRef.current,
             renderer: any = renRef.current,
-            points: any;
+            points  : any;
         
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xC4C4C4);
+        let positions: number[] = [];
+        let colors   :    any[] = [];
+        
+        
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xB57C7C);
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 15;
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 2;
+        
+        const geometry = new THREE.BufferGeometry();
 
-            const geometry = new THREE.BufferGeometry();
+        let w = [-1.6905239445560225, 1.2500000000000002, -0.5168450375912946];
 
-            // const mandelbulb = calculateMandlebulb()
+        // for(let i = 0; i < ITERATIONS; i++) {
+            let result: any = calculateMandlebulb(w);
 
-            // Center it
+            // Push to positions, which will be used in BufferGeometry
+            // positions.push(result[0], result[1], result[2])
 
-            // set the geoRef
+            // setNewVector(w, result);
+        // }
 
-            // Set Points
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(result[0], 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(result[1], 3))
+        geometry.computeBoundingSphere();
+
+        const material = new THREE.PointsMaterial({ size: 0.011, vertexColors: true });
+        const light = new THREE.AmbientLight(0x404040);
+
+        geometry.center()
+
+        geoRef.current = geometry;
+
+        points = new THREE.Points(geometry, material);
+
+        points.frustumCulled = false;
+        poiRef.current = points;
+        scene.add(light)
+        scene.add(points);
+
+        renderer = new THREE.WebGLRenderer({ antialias: false });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        document.body.appendChild(renderer.domElement);
+
+        let animate = function () {
+            requestAnimationFrame(animate);
+            render()
+        };
+        function render() {
+
+            // w[0] += -0.00001;
+            // w[1] +=  0.00001;
+
+            // // w[0] += -0.000000000000001;
+            // // w[1] +=  0.000000000000001;
+            // // w[2] += -0.000000000000001;
+
+            w[0] += -0.0000000000000005;
+            w[1] +=  0.0000000000000005;
+            w[2] +=  0.0000000000000005;
+
+            let newResult    = calculateMandlebulb(w);
+            let newPositions =  newResult[0];
+            let newColors    =  newResult[1];
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
+            renderer.render(scene, camera);
+        }
+        animate();
     }
+
+    const cancelVis = () => {
+        if (isOpened) {
+            // Stop requestAnimationFrame
+            cancelAnimationFrame(reqRef.current);
+
+            // Garbage Collection
+            disposeHierarchy(sceRef.current, disposeNode);
+
+            // Renderer cleanup
+            renRef.current.dispose();
+
+            // Remove scene
+            sceRef.current.remove(poiRef.current)
+
+            // Retrieve HtmlCollection of canvas's
+            let canvas = document.getElementsByTagName('CANVAS')
+
+            // Remove all canvas elements
+            for (let i = 0; i < canvas.length; i++) {
+                canvas[0].remove();
+            }
+
+            setIsOpened(false);
+        }
+    }
+
+    const setNewVector = (v1: number[], v2: number[]) => {
+        v1[0] = v2[0];
+        v1[1] = v2[1];
+        v1[2] = v2[2];
+    }
+
+    function length(z: any) {
+        return Math.sqrt(z[0] * z[0] + z[1] * z[1] + z[2] * z[2]);
+    }
+
+    function scalarMultiply(a: any, amount: any) {
+        a[0] *= amount;
+        a[1] *= amount;
+        a[2] *= amount;
+        return a;
+    }
+
+    function setTo(v1: any, v2: any) {
+        v1[0] = v2[0];
+        v1[1] = v2[1];
+        v1[2] = v2[2];
+        return v1;
+    }
+
 
     return (
         <div ref={ctxRef}>
