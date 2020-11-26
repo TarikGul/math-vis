@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Scene } from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDefaultBox = (props: { active: boolean }) => {
@@ -16,8 +15,11 @@ const MathDefaultBox = (props: { active: boolean }) => {
         new THREE.WebGLRenderer({ antialias: true })
     );
 
+    const [isOpened, setIsOpened] = useState<boolean>(false)
+
     useEffect(() => {
         if (props.active) {
+            setIsOpened(true);
             initViewPort();
         } else {
             cancelVis();
@@ -28,6 +30,15 @@ const MathDefaultBox = (props: { active: boolean }) => {
         let scene = sceRef.current;
         let camera = camRef.current;
         let renderer = renRef.current;
+        let squarePos: number[] = [
+            0, 0, 1, 0, 1, 1, 1, 1, 1,
+            1, 0, 1, 1, 0, 0, 1, 1, 0, 
+            0, 1, 0, 0, 1, 1, 0, 0, 0,
+            0, 0, 1, 0, 1, 0, 0, 0, 0,
+            1, 0, 0, 1, 0, 1, 1, 1, 0,
+            1, 1, 1, 1, 0, 0, 0, 0, 1, 
+            1, 0, 1
+        ];
 
         renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -40,9 +51,13 @@ const MathDefaultBox = (props: { active: boolean }) => {
             camera.updateProjectionMatrix();
         })
 
-        let geometry = new THREE.BoxGeometry(1, 1, 1);
-        let material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        let cube = new THREE.Mesh(geometry, material);
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(squarePos, 3));
+
+        geometry.center();
+
+        let material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+        let cube = new THREE.Line(geometry, material);
 
         scene.add(cube);
         camera.position.z = 5;
@@ -82,6 +97,8 @@ const MathDefaultBox = (props: { active: boolean }) => {
         for (let i = 0; i < canvas.length; i++) {
             canvas[0].remove();
         }
+
+        setIsOpened(false);
     }
 
     return (
