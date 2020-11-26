@@ -99,7 +99,7 @@ const MathDonut = (props: { active: boolean }) => {
 
         // Init the scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xC4C4C4);
+        scene.background = new THREE.Color(0xB57C7C);
         // scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
         // Setup camera -> Canvas
