@@ -88,6 +88,10 @@ const MathDonut = (props: { active: boolean }) => {
     }
 
     const initViewport = () => {
+        /**
+         * TYPES
+         * Need to abstract these and put them into a Types file
+         */
         let camera: any = camRef.current, 
             scene: any = sceRef.current, 
             renderer: any = renRef.current, 
@@ -137,7 +141,7 @@ const MathDonut = (props: { active: boolean }) => {
         document.body.appendChild(renderer.domElement);
 
         let animate = function () {
-            requestAnimationFrame(animate);
+            reqRef.current = requestAnimationFrame(animate);
             render()
         };
 
