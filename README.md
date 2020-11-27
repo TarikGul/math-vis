@@ -12,7 +12,7 @@ Really just because I want to practice more typescript with React, but also want
 
 Im using three.js instead of plan WEBGL because of the readabiity and documentation with Three.js. Its a growing community, and I really like some of the tooling their API has to offer. That being said this is the first time im using it. 
 
-Here are some gifs so far. The Torus is finished for the most part. I am having touble with the Mandelbulb, There is something wrong with my mathematically understanding of the mandelbulb so its just print a sphere with a concentration near the polar points specifcally the starting. But I was able to find really cool behaviors that I would never be able to understand without the visuals with where my high level mathematics is right now. 
+Here are some gifs so far. The Torus is finished for the most part. I am having touble with the Mandelbulb, There is something wrong with my mathematical understanding of the mandelbulb so it just prints a sphere with a concentration near the polar coordinates of our original hypercomplex set of numbers. But I was able to find some really cool behaviors that I would never be able to understand without the visuals with where my high level mathematics is right now. 
 
 ![Torus](./public/Torus.gif)
 
