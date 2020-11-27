@@ -27,6 +27,10 @@ const MathDefaultBox = (props: { active: boolean }) => {
     }, [props.active]);
 
     const initViewPort = () => {
+        /**
+         * TYPES
+         * Need to abstract these and put them into a Types file
+         */
         let scene = sceRef.current;
         let camera = camRef.current;
         let renderer = renRef.current;
