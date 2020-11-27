@@ -12,13 +12,15 @@ Really just because I want to practice more typescript with React, but also want
 
 Im using three.js instead of plan WEBGL because of the readabiity and documentation with Three.js. Its a growing community, and I really like some of the tooling their API has to offer. That being said this is the first time im using it. 
 
-Here are some pictures so far. Everything is adjustable, to the amount of verticies, to size, speed, and colors. Thats what i need to work on next is the console, and allow it to work in conjunction with the renderer. 
+Here are some gifs so far. The Torus is finished for the most part. I am having touble with the Mandelbulb, There is something wrong with my mathematically understanding of the mandelbulb so its just print a sphere with a concentration near the polar points specifcally the starting. But I was able to find really cool behaviors that I would never be able to understand without the visuals with where my high level mathematics is right now. 
 
-![Torus minimum lighting](./public/torus-lighting.png)
+![Torus](./public/Torus.gif)
 
-![Torus lighting](./public/torus-min-lighting.png)
+![MandelBulb](./public/MandelBulb.gif)
 
 ## Setup
+
+Clone the repository
 
 Copy `tsconfig.json`
 
