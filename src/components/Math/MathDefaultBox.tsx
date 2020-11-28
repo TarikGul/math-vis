@@ -19,8 +19,10 @@ const MathDefaultBox = (props: { active: boolean }) => {
 
     useEffect(() => {
         if (props.active) {
-            setIsOpened(true);
-            initViewPort();
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewPort();
+            }, 300);
         } else {
             cancelVis();
         }
@@ -83,27 +85,29 @@ const MathDefaultBox = (props: { active: boolean }) => {
     }
 
     const cancelVis = () => {
-        // Stop requestAnimationFrame
-        cancelAnimationFrame(reqRef.current);
-
-        // Garbage Collection
-        disposeHierarchy(sceRef.current, disposeNode);
-
-        // Renderer cleanup
-        renRef.current.dispose();
-
-        // Remove the current scene
-        sceRef.current.remove(cubRef.current)
-
-        // Retrieve HtmlCollection of canvas's
-        let canvas = document.getElementsByTagName('CANVAS')
-
-        // Remove all canvas elements
-        for (let i = 0; i < canvas.length; i++) {
-            canvas[0].remove();
+        if (isOpened) {
+            // Stop requestAnimationFrame
+            cancelAnimationFrame(reqRef.current);
+    
+            // Garbage Collection
+            disposeHierarchy(sceRef.current, disposeNode);
+    
+            // Renderer cleanup
+            renRef.current.dispose();
+    
+            // Remove the current scene
+            sceRef.current.remove(cubRef.current)
+    
+            // Retrieve HtmlCollection of canvas's
+            let canvas = document.getElementsByTagName('CANVAS')
+    
+            // Remove all canvas elements
+            for (let i = 0; i < canvas.length; i++) {
+                canvas[0].remove();
+            }
+    
+            setIsOpened(false);
         }
-
-        setIsOpened(false);
     }
 
     return (
