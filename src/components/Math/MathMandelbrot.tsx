@@ -7,7 +7,7 @@ import * as MBROT from '../../types/MandelbrotTypes';
 
 const MathMandelbrot = (props: { active: boolean }) => {
 
-    const MAX_ITERATION = 80;
+    const MAX_ITERATION: number = 100;
     const REAL_SET     : MBROT.MandelbrotStartEnd = { start: -2, end: 1 };
     const IMAGINARY_SET: MBROT.MandelbrotStartEnd = { start: -1, end: 1 };
 
@@ -27,7 +27,7 @@ const MathMandelbrot = (props: { active: boolean }) => {
     );
     // Renderer ref
     const renRef = useRef<THREE.WebGLRenderer>(
-        new THREE.WebGLRenderer({ antialias: true })
+        new THREE.WebGLRenderer()
     );
 
     const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -68,10 +68,13 @@ const MathMandelbrot = (props: { active: boolean }) => {
     }   
 
     const mapMandelbrot = () => {
-        let complex: MBROT.MandelbrotComplexSet;
+        let complex : MBROT.MandelbrotComplexSet,
+            curColor: string;
 
         const positions: number[] = [];
-        const colors   : number[] = [];
+        const colors   : any[] = new Array(32).fill(0).map((_, i) => i === 0 ? 
+                '#000' : `#${((1 << 24) * Math.random() | 0).toString(16)}`);
+
         const color = new THREE.Color();
 
         for (let i = 0; i < window.innerWidth; i++) {
@@ -81,10 +84,12 @@ const MathMandelbrot = (props: { active: boolean }) => {
                     y: IMAGINARY_SET.start + (j / window.innerHeight) * (IMAGINARY_SET.end - IMAGINARY_SET.start)
                 }
 
-                const [m, isMandelbrotSet] = calculateMandelbrot(complex);
-                if (isMandelbrotSet) {
+                const [m, isMandelbrotSet]: any = calculateMandelbrot(complex);
+
+                if (m >= 3) {
                     positions.push(i, j, 0);
-                    color.setRGB(255, 255, 255);
+                    curColor = colors[isMandelbrotSet ? 0 : (m % colors.length - 1) + 1]
+                    color.set(curColor);
                     colors.push(color.r, color.g, color.b);
                 }
             }
@@ -107,8 +112,8 @@ const MathMandelbrot = (props: { active: boolean }) => {
         scene.background = new THREE.Color(0xB57C7C);
 
         // Setup camera -> Canvas
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 1000;
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.z = 850;
 
         const geometry = new THREE.BufferGeometry();
 
@@ -131,12 +136,19 @@ const MathMandelbrot = (props: { active: boolean }) => {
         scene.add(points);
 
         renderer = new THREE.WebGLRenderer({ antialias: false });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        // renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
 
         renderer.render(scene, camera);
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+
+            camera.updateProjectionMatrix();
+        })
     }
 
     const cancelVis = () => {
