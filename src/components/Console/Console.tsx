@@ -21,6 +21,7 @@ const Console = (props: { setSelectedVis: any }) => {
                 <option value="default">Box</option>
                 <option value="torus">Torus</option>
                 <option value="mandelbulb">Mandelbulb</option>
+                <option value="mandelbrot">Mandelbrot</option>
             </select>
         </div>
     )
