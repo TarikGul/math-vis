@@ -31,6 +31,7 @@ const Viewport = (props: {selectedVis: string}) => {
         <div>
             <MathDefaultBox active={defaultActive(localState)}/>
             <MathDonut active={donutActive(localState)}/>
+            <MathMandelbulb active={MandelbulbActive(localState)}/>
         </div>
     )
 }
