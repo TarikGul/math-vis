@@ -3,15 +3,18 @@ import * as THREE from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDonut = (props: { active: boolean }) => {
-    let intervalId: any;
 
     let A: number = 1;
     let B: number = 1;
 
-    const R1: number = 1, 
-          R2: number = 2, 
-          K1: number = 150, 
-          K2: number = 7;
+    let R1: number = 1, 
+        R2: number = 2, 
+        K1: number = 150, 
+        K2: number = 7;
+
+    // Used 
+    let radiusCount     : number = 0;
+    let radiusDirection : number = 1;
 
     // Geometry buffer ref
     const geoRef = useRef<any>();
@@ -32,7 +35,8 @@ const MathDonut = (props: { active: boolean }) => {
         new THREE.WebGLRenderer({ antialias: true })
     );
 
-    const [isOpened, setIsOpened] = useState<boolean>(false)
+    const [isOpened, setIsOpened] = useState<boolean>(false);
+    const [breathingDonut, setIsBreathingDonut] = useState<boolean>(false);
 
     useEffect(() => {
         if (props.active) {
@@ -49,7 +53,7 @@ const MathDonut = (props: { active: boolean }) => {
         const colors   :    any[] = [];
         const color = new THREE.Color();
 
-        const n = 1000, n2 = n / 2;
+        const n = 1000;
 
         let cA = Math.cos(A), sA = Math.sin(A),
             cB = Math.cos(B), sB = Math.sin(B);
@@ -68,15 +72,8 @@ const MathDonut = (props: { active: boolean }) => {
                 let z = (K2 + cA * ox * sp + sA * oy)
                 let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
 
-                // If we want to make the vertices colorful.
-                // But in this specific case we are not because we 
-                // want to capture correct lighting
-                const vx = (x / n) + 0.5;
-                const vy = (y / n) + 0.5;
-                const vz = (z / n) + 0.5;
-
                 positions.push(x, y, z);
-                // color.setRGB(vx, vy, L);
+
                 color.setRGB(255, 255, L);
                 color.setHSL(0, 0, L);
 
@@ -95,16 +92,11 @@ const MathDonut = (props: { active: boolean }) => {
         let camera: any = camRef.current, 
             scene: any = sceRef.current, 
             renderer: any = renRef.current, 
-            points: any, 
-            drawCount: any;
-
-        // let A: number = 1;
-        // let B: number = 1;
+            points: any;
 
         // Init the scene
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xB57C7C);
-        // scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
         // Setup camera -> Canvas
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -146,19 +138,31 @@ const MathDonut = (props: { active: boolean }) => {
         };
 
         function render() {
+            
             A += 0.007;
             B += 0.003;
 
+            // The breathing donut
+            if (breathingDonut) {
+                if (radiusCount % 100 === 0) {
+                    radiusDirection *= -1;
+                }
+
+                R1 += (radiusDirection * 0.01);
+                R2 += (radiusDirection * 0.01);
+                radiusCount += 1;
+            }
             const result = calculateTorus();
             const newPositions = result[0];
             const newColors = result[1];
             
-            // geometry.deleteAttribute('position');
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
             geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
 
             renderer.render(scene, camera);
         }
+
+        // Render the scene
         animate();
 
         window.addEventListener('resize', () => {
