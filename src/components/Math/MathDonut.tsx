@@ -40,8 +40,10 @@ const MathDonut = (props: { active: boolean }) => {
 
     useEffect(() => {
         if (props.active) {
-            setIsOpened(true)
-            initViewport();
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewport();
+            }, 500);
         } else {
             cancelVis();
         }
