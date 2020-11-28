@@ -49,11 +49,14 @@ I am having this weird property that is causing each transformation to react to 
 Need to add coloring to the fractals, and also considering doing a zoom animation as well, but that requires large CPU usage so I dont think it would be appropriate for all hardware so well have to find some time of option for it. 
 
 ![MandelBrot](./public/Mandelbrot.png)
+![MandelBrotColor](./public/MandelbrotColor.png)
 
 ### Other interests and future goals
 
 - Cayley Diagrams
 - Tropical Geometry
+- Julia Sets 3D/4D
+- Visualize a Cryptographic PROTOCOL(WOAHH right???)
 
 ## Notes
 
