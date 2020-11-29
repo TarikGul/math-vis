@@ -72,8 +72,20 @@ const MathMandelbrot = (props: { active: boolean }) => {
             curColor: string;
 
         const positions: number[] = [];
-        const colors   : any[] = new Array(32).fill(0).map((_, i) => i === 0 ? 
-                '#000' : `#${((1 << 24) * Math.random() | 0).toString(16)}`);
+        
+        const colors: any[] = [
+            '#000',    '#0e46bb', '#143dbd', '#1a36bf', 
+            '#212fc2', '#2729c4', '#382ec6', '#4a34c8',
+            '#5b3bcb', '#6c42cd', '#7c49cf', '#8b51d1', 
+            '#9a58d4', '#a75fd6', '#b567d8', '#c16fda',
+            '#cc77dd', '#d77fdf', '#e187e1', '#e38fdd', 
+            '#e698da', '#e8a1d8', '#eaa9d6', '#ecb2d6',
+            '#efbbd7', '#f1c4d9', '#f3cedc', '#f5d7e1', 
+            '#f8e1e6', '#faebed', '#fcf4f5', '#ffffff',
+        ]
+
+        // const colors: any[] = new Array(32).fill(0).map((_, i) => i === 0 ? 
+        //         '#000' : `#${((1 << 24) * Math.random() | 0).toString(16)}`);
 
         const color = new THREE.Color();
 
@@ -113,7 +125,7 @@ const MathMandelbrot = (props: { active: boolean }) => {
 
         // Setup camera -> Canvas
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-        camera.position.z = 850;
+        camera.position.z = 650;
 
         const geometry = new THREE.BufferGeometry();
 
