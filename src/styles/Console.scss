@@ -1,68 +1,54 @@
-$icon-size	  : 60px;
-$border-radius: 0.5;//15% = 0.15, 50% = 0.50 etc.
-
-$background   : #2d2c3e;
-$background-b : #2d2c3e;
-
-// Icon Colors
-$green        : #16A085;
-$red          : #C82647;
-$green-l      : #8CC63F;
-$orange       : #EB9532;
-$purple       : #7E3661;
-
-// Text
-$white		  : #FFFFFF;
-
 .console-wrapper {
-    margin: 15px;
+	margin: 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
     position: absolute;
     left: 0;
-    height: 20vh;
+    height: 50px;
     width: 20%;
     background-color: rgba(226, 226, 226, 0.363);
     border-radius: 3px;
-    opacity: 0.4;
+    opacity: 0.9;
 }
 
-.icon{
-	cursor: pointer;
-	position: relative;
-	display: inline-block;
-	width: $icon-size;
-	height: $icon-size;
-	margin-left: $icon-size/5;
-	margin-right: $icon-size/5;
-	border-radius: $icon-size*$border-radius;
-	overflow: hidden;
-	&::before, &::after{
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
-		transition: all 0.25s ease;
-		border-radius: $icon-size*$border-radius;
-	}
-	i{
-		position: relative;
-		color: $white;
-		font-size: $icon-size/2;
-		margin-top: $icon-size/4;
-		transition: all 0.25s ease;
-	}
+.bar1, .bar2, .bar3 {
+  width: 35px;
+  height: 5px;
+  margin: 6px 0;
+  margin-left: 4px;
+  margin-top: 5px;
+  transition: 0.4s;
+  background-color: white;
 }
 
-.icon-expand{
-	&::after{
-		box-shadow: inset 0 0 0 1px $red;
-	}
-	&::before{
-		background: $red;
-		box-shadow: inset 0 0 0 $icon-size $background;
-	}
-	&:hover::before{
-		box-shadow: inset 0 0 0 1px $background;
-	}
+/* Rotate first bar */
+.change-bar1 {
+  -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
+  transform: rotate(-45deg) translate(-9px, 6px) ;
+  width: 35px;
+  height: 5px;
+  margin: 6px 0;
+  margin-left: 4px;
+  margin-top: 5px;
+  transition: 0.4s;
+  background-color: white;
+}
+
+/* Fade out the second bar */
+.change-bar2 {
+  opacity: 0;
+}
+
+/* Rotate last bar */
+.change-bar3 {
+  -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
+  transform: rotate(45deg)  ;
+  width: 35px;
+  height: 5px;
+  margin: 6px 0;
+  margin-left: 4px;
+  margin-top: 5px;
+  transition: 0.4s;
+  background-color: white;
 }
