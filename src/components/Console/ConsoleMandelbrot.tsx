@@ -29,7 +29,7 @@ const ConsoleMandelbrot = () => {
             <i style={styles.italic}>-Wikipedia</i>
             <p>
                 What makes a Mandelbrot set so cool and unique is as you zoom in it gets infinitely 
-                more complicated, and has this fine recursive characteristic to it. Making it a well known fractal-curve
+                more complicated, and has this fine recursive characteristic to it. Making it a well known fractal-curve.
             </p>
             <p>
                 Unfortuneately it is not wise to test the average CPU's lifespan by rendering an 
@@ -38,7 +38,14 @@ const ConsoleMandelbrot = () => {
             <p>
                 Now lets get to the good stuff!
             </p>
-
+            <p>
+                In order to represent the Mandelbrot visually we need to find each point 
+                <i> c</i> of a part of the complex plane, if <InlineMath>Z_n</InlineMath> is bounded. 
+            </p>
+            <p>
+                If the modulus of <InlineMath>Z_n</InlineMath> is greater than two, then it is not part of the 
+                Mandelbrot set
+            </p>
         </div>
     )
 }
