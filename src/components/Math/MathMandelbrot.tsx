@@ -74,14 +74,14 @@ const MathMandelbrot = (props: { active: boolean }) => {
         const positions: number[] = [];
         
         const colors: any[] = [
-            '#000',    '#0e46bb', '#143dbd', '#1a36bf', 
-            '#212fc2', '#2729c4', '#382ec6', '#4a34c8',
-            '#5b3bcb', '#6c42cd', '#7c49cf', '#8b51d1', 
-            '#9a58d4', '#a75fd6', '#b567d8', '#c16fda',
-            '#cc77dd', '#d77fdf', '#e187e1', '#e38fdd', 
-            '#e698da', '#e8a1d8', '#eaa9d6', '#ecb2d6',
-            '#efbbd7', '#f1c4d9', '#f3cedc', '#f5d7e1', 
-            '#f8e1e6', '#faebed', '#fcf4f5', '#ffffff',
+            0x000,    0xc16fda, 0x9a58d4, 0xa75fd6, 
+            0xb567d8, 0x8b51d1, 0x5b3bcb, 0x6c42cd, 
+            0x7c49cf, 0x212fc2, 0x2729c4, 0x382ec6, 
+            0x4a34c8, 0x1a36bf, 0x0e46bb, 0x143dbd,
+            0xe38fdd, 0xcc77dd, 0xd77fdf, 0xe187e1,
+            0xecb2d6, 0xe698da, 0xe8a1d8, 0xeaa9d6,
+            0xf5d7e1, 0xefbbd7, 0xf1c4d9, 0xf3cedc,
+            0xffffff, 0xf8e1e6, 0xfaebed, 0xfcf4f5,
         ]
 
         // const colors: any[] = new Array(32).fill(0).map((_, i) => i === 0 ? 
@@ -98,7 +98,7 @@ const MathMandelbrot = (props: { active: boolean }) => {
 
                 const [m, isMandelbrotSet]: any = calculateMandelbrot(complex);
 
-                if (m >= 3) {
+                if (m >= 3.5) {
                     positions.push(i, j, 0);
                     curColor = colors[isMandelbrotSet ? 0 : (m % colors.length - 1) + 1]
                     color.set(curColor);
