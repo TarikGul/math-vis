@@ -84,9 +84,6 @@ const MathMandelbrot = (props: { active: boolean }) => {
             0xffffff, 0xf8e1e6, 0xfaebed, 0xfcf4f5,
         ]
 
-        // const colors: any[] = new Array(32).fill(0).map((_, i) => i === 0 ? 
-        //         '#000' : `#${((1 << 24) * Math.random() | 0).toString(16)}`);
-
         const color = new THREE.Color();
 
         for (let i = 0; i < window.innerWidth; i++) {
