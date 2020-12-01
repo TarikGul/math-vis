@@ -4,6 +4,10 @@ import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 const MathDefaultBox = (props: { active: boolean }) => {
 
+    /**
+     * DEFAULT, changing to a different Shape disables this view
+     */
+
     const reqRef = useRef<any>();
     const cubRef = useRef<any>();
     const ctxRef = useRef<HTMLHeadingElement | null>(null);
