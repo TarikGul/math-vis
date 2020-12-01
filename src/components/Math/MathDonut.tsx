@@ -16,16 +16,16 @@ const MathDonut = (props: { active: boolean }) => {
     let radiusCount     : number = 0;
     let radiusDirection : number = 1;
 
-    // Geometry buffer ref
-    const geoRef = useRef<any>();
     // Request animation ref
     const reqRef = useRef<any>();
-    // Points ref
-    const poiRef = useRef<any>();
-    // Context ref 
-    const ctxRef = useRef<HTMLHeadingElement | null>(null);
     // Scene ref
     const sceRef = useRef<THREE.Scene>(new THREE.Scene());
+    // Geometry buffer ref
+    const geoRef = useRef<THREE.BufferGeometry | null>(null);
+    // Context ref 
+    const ctxRef = useRef<HTMLHeadingElement | null>(null);
+    // Points ref
+    const poiRef = useRef<THREE.Points | THREE.Object3D>(new THREE.Points());
     // Camera ref
     const camRef = useRef<THREE.PerspectiveCamera>(
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -36,6 +36,7 @@ const MathDonut = (props: { active: boolean }) => {
     );
 
     const [isOpened, setIsOpened] = useState<boolean>(false);
+    // Fun little idea to play around with
     const [breathingDonut, setIsBreathingDonut] = useState<boolean>(false);
 
     useEffect(() => {
@@ -55,8 +56,6 @@ const MathDonut = (props: { active: boolean }) => {
         const colors   :    any[] = [];
         const color = new THREE.Color();
 
-        const n = 1000;
-
         let cA = Math.cos(A), sA = Math.sin(A),
             cB = Math.cos(B), sB = Math.sin(B);
 
@@ -71,7 +70,9 @@ const MathDonut = (props: { active: boolean }) => {
 
                 let x = ox * (cB * cp + sA * sB * sp) - oy * cA * sB; // final 3D x coordinate
                 let y = ox * (sB * cp - sA * cB * sp) + oy * cA * cB; // final 3D y
-                let z = (K2 + cA * ox * sp + sA * oy)
+                let z = (K2 + cA * ox * sp + sA * oy)                 // final 3D z
+
+                // Lumins for vertice (Alpha)
                 let L = 0.9 * (cp * ct * sB - cA * ct * sp - sA * st + cB * (cA * st - ct * sA * sp));
 
                 positions.push(x, y, z);
@@ -89,12 +90,11 @@ const MathDonut = (props: { active: boolean }) => {
     const initViewport = () => {
         /**
          * TYPES
-         * Need to abstract these and put them into a Types file
          */
-        let camera: any = camRef.current, 
-            scene: any = sceRef.current, 
+        let camera  : any = camRef.current, 
+            scene   : any = sceRef.current, 
             renderer: any = renRef.current, 
-            points: any;
+            points  : any;
 
         // Init the scene
         scene = new THREE.Scene();
@@ -104,8 +104,10 @@ const MathDonut = (props: { active: boolean }) => {
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 15;
 
+        // Init our buffer
         const geometry = new THREE.BufferGeometry();
 
+        // Retrive the positions and colors for the Buffer
         const torus = calculateTorus();
         const positions = torus[0];
         const colors = torus[1];
@@ -116,22 +118,27 @@ const MathDonut = (props: { active: boolean }) => {
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
         geometry.computeBoundingSphere();
 
+        // Init Render Aesthetics
         const material = new THREE.PointsMaterial({ size: 0.04, vertexColors: true });
 
+        // Wrap up initializing geometrys and set ref
         geometry.center()
-
         geoRef.current = geometry;
 
+        // Wrap up initializing points and set ref
         points = new THREE.Points(geometry, material);
-
         points.frustumCulled = false;
         poiRef.current = points;
+
+        // Add Scene, Torus will only have one scene
         scene.add(points);
 
+        // Init Renderer
         renderer = new THREE.WebGLRenderer({ antialias: false });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
+        // Create canvas
         document.body.appendChild(renderer.domElement);
 
         let animate = function () {
@@ -154,6 +161,7 @@ const MathDonut = (props: { active: boolean }) => {
                 R2 += (radiusDirection * 0.01);
                 radiusCount += 1;
             }
+            
             const result = calculateTorus();
             const newPositions = result[0];
             const newColors = result[1];

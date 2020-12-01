@@ -11,16 +11,16 @@ const MathMandelbrot = (props: { active: boolean }) => {
     const REAL_SET     : MBROT.MandelbrotStartEnd = { start: -2, end: 1 };
     const IMAGINARY_SET: MBROT.MandelbrotStartEnd = { start: -1, end: 1 };
 
-    // Geometry buffer ref
-    const geoRef = useRef<any>();
     // Request animation ref
     const reqRef = useRef<any>();
-    // Points ref
-    const poiRef = useRef<any>();
-    // Context ref 
-    const ctxRef = useRef<HTMLHeadingElement | null>(null);
     // Scene ref
     const sceRef = useRef<THREE.Scene>(new THREE.Scene());
+    // Geometry buffer ref
+    const geoRef = useRef<THREE.BufferGeometry | null>(null);
+    // Context ref 
+    const ctxRef = useRef<HTMLHeadingElement   | null>(null);
+    // Points ref
+    const poiRef = useRef<THREE.Points | THREE.Object3D>(new THREE.Points());
     // Camera ref
     const camRef = useRef<THREE.PerspectiveCamera>(
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -82,10 +82,12 @@ const MathMandelbrot = (props: { active: boolean }) => {
             0xecb2d6, 0xe698da, 0xe8a1d8, 0xeaa9d6,
             0xf5d7e1, 0xefbbd7, 0xf1c4d9, 0xf3cedc,
             0xffffff, 0xf8e1e6, 0xfaebed, 0xfcf4f5,
-        ]
+        ];
 
         const color = new THREE.Color();
 
+        // Iterate through each pixel on the Canvas, and evalute if that pixels 
+        // sits within out complex plane/Mandelbrot set
         for (let i = 0; i < window.innerWidth; i++) {
             for (let j = 0; j < window.innerHeight; j++) {
                 complex = {
@@ -111,10 +113,10 @@ const MathMandelbrot = (props: { active: boolean }) => {
          * TYPES
          */
 
-        let camera: any = camRef.current,
-            scene: any = sceRef.current,
+        let camera  : any = camRef.current,
+            scene   : any = sceRef.current,
             renderer: any = renRef.current,
-            points: any;
+            points  : any;
 
         // Init the scene
         scene = new THREE.Scene();
@@ -124,40 +126,47 @@ const MathMandelbrot = (props: { active: boolean }) => {
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
         camera.position.z = 650;
 
+        // Init our buffer
         const geometry = new THREE.BufferGeometry();
 
+        // Retrieve positions and colors for Buffer
         const mandelbrot = mapMandelbrot();
         const positions  = mandelbrot[0];
         const colors     = mandelbrot[1];
 
+        // Init Render Aesthetics
         const material = new THREE.PointsMaterial({ size: 1, vertexColors: true });
 
+        // Store Buffer information
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
+        // Wrap up initializing geometrys and set ref 
+        geometry.center()
         geoRef.current = geometry;
 
-        geometry.center()
-
+        // Wrap up initializing Points and set ref
         points = new THREE.Points(geometry, material);
-
         poiRef.current = points;
-        scene.add(points);
 
+        // Init Renderer
         renderer = new THREE.WebGLRenderer({ antialias: false });
-        // renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
+        // Create Canvas
         document.body.appendChild(renderer.domElement);
 
+        // Init Scene
+        scene.add(points);
         renderer.render(scene, camera);
 
+        // Keeps canvas responsive
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
 
             camera.updateProjectionMatrix();
-        })
+        });
     }
 
     const cancelVis = () => {
@@ -172,10 +181,10 @@ const MathMandelbrot = (props: { active: boolean }) => {
             renRef.current.dispose();
 
             // Remove scene
-            sceRef.current.remove(poiRef.current)
+            sceRef.current.remove(poiRef.current);
 
             // Retrieve HtmlCollection of canvas's
-            let canvas = document.getElementsByTagName('CANVAS')
+            let canvas = document.getElementsByTagName('CANVAS');
 
             // Remove all canvas elements
             for (let i = 0; i < canvas.length; i++) {
