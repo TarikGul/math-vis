@@ -16,13 +16,10 @@ Im using three.js instead of plain WEBGL because of the readabiity and documenta
 
 Clone the repository
 
-Copy `tsconfig.json`
-
-Delete `tsconfig.json`
-
-run `yarn start`
-
-paste old `tsconfig.json`
+    $cat tsconfig.json // Copy the output
+    $rm -rf tsconfig.json
+    $yarn start
+    // paste old tsconfig.json in the new tsconfig.json
 
 Unfortunately this is the only work around I know with the current CRA- Typescript bug. Currently is an issue with `typscript@4.0.3`
 
