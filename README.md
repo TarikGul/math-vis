@@ -57,8 +57,4 @@ Need to add coloring to the fractals, and also considering doing a zoom animatio
 
 ## Notes
 
-All memory leaks associated with Three.js is taken care of. The last thing
-That needs to get done in regards to the garbage collection is, before switching
-visualizations i need to make a promise that will only render the next Object3D if
-garbage collection is complete and finished, or else there will be a shader typeerror
-that occurs. 
+All memory leaks associated with Three.js are taken care of. 
