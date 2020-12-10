@@ -33,6 +33,8 @@ The first completed shape
 
 ## Mandelbulb
 
+Warning! take 
+
 ### Insights
 
 My current implementation is niave and was more of a brute force method of plotting out k amount of points in a mandelbulb. My first implementation is pretty simple. We have a 3D Complex Plane. We have a set of complex numbers (triplex) and we represent them with each { x, y } pixel. I then chose a fixed square in the center that I want as my "sphere" or 3D grid, then add a  z value leaving us with { x, y, z }. After applying the Mandelbulb formula on our points 32 times (can increase for more accuracy)we check to see if the number we get back is bounded within our c value in the mandelbulb calculation, and then we have a point within a slice of the mandelbulb. We then decide how may slices we want in our visualization how many z values we will receive. The more slices the more detailed it becomes. 
