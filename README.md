@@ -35,6 +35,8 @@ The first completed shape
 
 Working on Optimizing the Mandelbulb. This is just me printing out 40*2d layers into a 3d Grid/Orbit.  
 
+I also need to at an 3D Orbit Trap that will allow for smoothh gradient coloring. 
+
 ![MandelBulb](./public/MandelBulb.gif)
 
 ## Mandelbrot
