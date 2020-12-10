@@ -33,11 +33,7 @@ The first completed shape
 
 ## Mandelbulb
 
-Currently working on it. 
-
-Stuck on scaling and iterating through the mandelbulb properly
-
-I am having this weird property that is causing each transformation to react to its polar coordinate.
+Working on Optimizing the Mandelbulb. This is just me printing out 40*2d layers into a 3d Grid/Orbit.  
 
 ![MandelBulb](./public/MandelBulb.gif)
 
