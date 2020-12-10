@@ -2,30 +2,37 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
+import * as MBROT from '../../types/MandelbulbTypes';
+import { RSA_X931_PADDING } from 'constants';
+
 /**
  * 
  * References!
  * https://github.com/royvanrijn/mandelbulb.js/blob/master/mandelbulb.js
  * http://bugman123.com/Hypercomplex/
  * https://www.iquilezles.org/www/articles/mandelbulb/mandelbulb.htm
+ * http://www.alenspage.net/ComplexNumbers.htm#:~:text=In%20the%203%2Ddimensional%20complex,and%20the%20i%2Cj%20plane.
  */
 
 const MathMandelbulb = (props: { active: boolean }) => {
 
-    const ITERATIONS    : number =  200.0;
-    const POWER         : number =    8.0;
-    const DEPTH_OF_FIELD: number =   25.0;
+    const ITERATIONS    : number =  2000.0; 
+    const POWER         : number =     8.0;
+    const DEPTH_OF_FIELD: number =    25.0;
 
-    // Geometry buffer ref
-    const geoRef = useRef<any>();
+    const REAL_SET     : MBROT.MandelbulbStartEnd = { start: -2, end: 1 };
+    const IMAGINARY_SET: MBROT.MandelbulbStartEnd = { start: -1, end: 1 };
+
     // Request animation ref
     const reqRef = useRef<any>();
-    // Points ref
-    const poiRef = useRef<any>();
-    // Context ref 
-    const ctxRef = useRef<HTMLHeadingElement | null>(null);
     // Scene ref
     const sceRef = useRef<THREE.Scene>(new THREE.Scene());
+    // Geometry buffer ref
+    const geoRef = useRef<THREE.BufferGeometry | null>(null);
+    // Context ref 
+    const ctxRef = useRef<HTMLHeadingElement   | null>(null);
+    // Points ref
+    const poiRef = useRef<THREE.Points | THREE.Object3D>(new THREE.Points());
     // Camera ref
     const camRef = useRef<THREE.PerspectiveCamera>(
         new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -39,60 +46,115 @@ const MathMandelbulb = (props: { active: boolean }) => {
 
     useEffect(() => {
         if (props.active) {
-            setIsOpened(true);
-            initViewport();
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewport();
+            }, 300);
         } else {
             cancelVis();
         }
     }, [props.active]);
 
-    const calculateMandlebulb = (pos: number[]) => {
+    const calculateMandlebulb = (pos: MBROT.MandelbulbComplexSet): [number[], boolean] => {
+        let x0: number = pos.x, 
+            y0: number = pos.y, 
+            z0: number = pos.z,
+            n0: number = 0;
+
+        let n    : number = 8, 
+            x    : number = 0,
+            y    : number = 0,
+            z    : number = 0;
+
+        let color: number[] = [];
+
+        for(let i = 0; i < 32; i++) {
+            let r    : number,
+                theta: number,
+                phi  : number
+
+            r     = Math.sqrt(x*x + y*y + z*z);
+            theta = Math.atan2(Math.sqrt(x*x + y*y), z);
+            phi   = Math.atan2(y, x);
+
+            x = r**n * Math.sin(theta*n) * Math.cos(phi*n) + x0;
+            y = r**n * Math.sin(theta*n) * Math.sin(phi*n) + y0;
+            z = r**n * Math.cos(theta*n) + z0;
+
+            n0 += 1;         
+
+            if((x**2 + y**2 + z**2) > 2) break;
+        }
+
+        let random = Math.floor(Math.random() * 255) + 1
+
+        color.push(0);
+        color.push(0);
+        color.push(0);
+        
+        return [color, n0 === 32]
+    }
+
+    const mapMandelbulb = () => {
+        let complex : MBROT.MandelbulbComplexSet,
+            curColor: string;
+
+        const positions: number[] = [];
+
+        const colors: any[] = [
+            0x000, 0xc16fda, 0x9a58d4, 0xa75fd6,
+            0xb567d8, 0x8b51d1, 0x5b3bcb, 0x6c42cd,
+            0x7c49cf, 0x212fc2, 0x2729c4, 0x382ec6,
+            0x4a34c8, 0x1a36bf, 0x0e46bb, 0x143dbd,
+            0xe38fdd, 0xcc77dd, 0xd77fdf, 0xe187e1,
+            0xecb2d6, 0xe698da, 0xe8a1d8, 0xeaa9d6,
+            0xf5d7e1, 0xefbbd7, 0xf1c4d9, 0xf3cedc,
+            0xffffff, 0xf8e1e6, 0xfaebed, 0xfcf4f5,
+        ];
+
         const color = new THREE.Color();
 
-        let sinTheta : number,
-            theta    : number,
-            phi      : number,
-            zr       : number,   
-            dr       : number,
-            r        : number,
-            z        : number[] = [0.0, 0.0, 0.0],
-            positions: number[] = [],
-            colors   :    any[] = [];
+        let ymax: number = window.innerHeight - (window.innerHeight / 15),
+            xmax: number = window.innerWidth  - (window.innerWidth  / 15),
+            xmin: number = (window.innerWidth  / 15),
+            ymin: number = (window.innerHeight / 15);
+        // let p = 50;
+        for (let p = -200; p < 200; p+=20) {
+            for (let i = xmin; i < xmax; i++) {
+                for(let j = ymin; j < ymax; j++) {
+                    let z: number;
 
-        // Update Z
-        setTo(z, pos);
+                    if(p < 0) {
+                        z = (p/200.0) * -1
+                    } else {
+                        z = p/200.0
+                    }
+                    
+                    complex = {
+                        x: 4.0 * (i - (window.innerWidth  /2.0)) / window.innerWidth,
+                        y: 4.0 * (j - (window.innerHeight /2.0)) / window.innerHeight,
+                        z: z
+                    }
 
+                    const [m, isMandelbulb] = calculateMandlebulb(complex);
 
-        dr = 1.0;
-        r  = 0.0;
-        for (let i = 0; i < ITERATIONS; i++) {
-            r = length(z);
-
-            if (r > DEPTH_OF_FIELD) break;
-
-            theta    = Math.acos(z[2] / r);
-            phi      = Math.atan2(z[1], z[0]);
-            dr       = Math.pow(r, POWER - 1.0) * POWER * dr + 1.0;
-            zr       = Math.pow(r, POWER);
-            theta    = theta * POWER;
-            phi      = phi * POWER;
-            sinTheta = Math.sin(theta);
-            z[0]     = sinTheta * Math.cos(phi);
-            z[1]     = Math.sin(phi) * sinTheta;
-            z[2]     = Math.cos(theta);
-
-            positions.push(z[0], z[1], z[2]);
-
-            Math.floor(Math.random() * Math.floor(255));
-
-            color.setRGB(0, 0, 0);
-            colors.push(color.r, color.g, color.b);
+                    if(isMandelbulb) {
+                        positions.push(i, j, p);
+                        curColor = `rgb(${m[0]},${m[1]},${m[2]})`;
+                        color.set(curColor);
+                        colors.push(color.r, color.g, color.b);
+                    }
+                }
+            }
         }
-        // return 0.5 * Math.log(r) * r / dr;
         return [positions, colors];
     }
 
     const initViewport = () => {
+        /**
+         * TYPES
+         * Need to abstract these and put them into a Types file
+         */
         let camera  : any = camRef.current,
             scene   : any = sceRef.current,
             renderer: any = renRef.current,
@@ -108,13 +170,11 @@ const MathMandelbulb = (props: { active: boolean }) => {
         scene.background = new THREE.Color(0xB57C7C);
 
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 2;
+        camera.position.z = 650;
         
         const geometry = new THREE.BufferGeometry();
 
-        w = [-1.6905239445560225, 1.2500000000000002, -0.5168450375912946];
-
-        result = calculateMandlebulb(w);
+        result = mapMandelbulb();
 
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(result[0], 3));
         geometry.setAttribute('color', new THREE.Float32BufferAttribute(result[1], 3))
@@ -141,28 +201,13 @@ const MathMandelbulb = (props: { active: boolean }) => {
         document.body.appendChild(renderer.domElement);
 
         let animate = function () {
-            requestAnimationFrame(animate);
+            reqRef.current = requestAnimationFrame(animate);
             render()
         };
         function render() {
 
-            // w[0] += -0.00001;
-            // w[1] +=  0.00001;
-
-            // // w[0] += -0.000000000000001;
-            // // w[1] +=  0.000000000000001;
-            // // w[2] += -0.000000000000001;
-
-            w[0] += -0.0000000000000005;
-            w[1] +=  0.0000000000000005;
-            w[2] +=  0.0000000000000005;
-
-            let newResult    = calculateMandlebulb(w);
-            let newPositions =  newResult[0];
-            let newColors    =  newResult[1];
-
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(newPositions, 3));
-            geometry.setAttribute('color', new THREE.Float32BufferAttribute(newColors, 3));
+            points.rotation.x += 0.01;
+            points.rotation.y += 0.01;
             renderer.render(scene, camera);
         }
         animate();
@@ -193,31 +238,6 @@ const MathMandelbulb = (props: { active: boolean }) => {
             setIsOpened(false);
         }
     }
-
-    const setNewVector = (v1: number[], v2: number[]) => {
-        v1[0] = v2[0];
-        v1[1] = v2[1];
-        v1[2] = v2[2];
-    }
-
-    function length(z: any) {
-        return Math.sqrt(z[0] * z[0] + z[1] * z[1] + z[2] * z[2]);
-    }
-
-    function scalarMultiply(a: any, amount: any) {
-        a[0] *= amount;
-        a[1] *= amount;
-        a[2] *= amount;
-        return a;
-    }
-
-    function setTo(v1: any, v2: any) {
-        v1[0] = v2[0];
-        v1[1] = v2[1];
-        v1[2] = v2[2];
-        return v1;
-    }
-
 
     return (
         <div ref={ctxRef}>
