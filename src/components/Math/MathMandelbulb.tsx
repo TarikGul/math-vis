@@ -16,13 +16,6 @@ import { RSA_X931_PADDING } from 'constants';
 
 const MathMandelbulb = (props: { active: boolean }) => {
 
-    const ITERATIONS    : number =  2000.0; 
-    const POWER         : number =     8.0;
-    const DEPTH_OF_FIELD: number =    25.0;
-
-    const REAL_SET     : MBROT.MandelbulbStartEnd = { start: -2, end: 1 };
-    const IMAGINARY_SET: MBROT.MandelbulbStartEnd = { start: -1, end: 1 };
-
     // Request animation ref
     const reqRef = useRef<any>();
     // Scene ref
@@ -86,11 +79,11 @@ const MathMandelbulb = (props: { active: boolean }) => {
             if((x**2 + y**2 + z**2) > 2) break;
         }
 
-        let random = Math.floor(Math.random() * 255) + 1
+        let random = Math.floor(Math.random() * 80) + 40
 
-        color.push(0);
-        color.push(0);
-        color.push(0);
+        color.push(170);
+        color.push(random);
+        color.push(random);
         
         return [color, n0 === 32]
     }
@@ -119,9 +112,9 @@ const MathMandelbulb = (props: { active: boolean }) => {
             xmin: number = (window.innerWidth  / 15),
             ymin: number = (window.innerHeight / 15);
         // let p = 50;
-        for (let p = -200; p < 200; p+=20) {
-            for (let i = xmin; i < xmax; i++) {
-                for(let j = ymin; j < ymax; j++) {
+        for (let p = -200; p < 200; p+=4) { // this is our z values
+            for (let i = xmin; i < xmax; i+=1.5) {
+                for(let j = ymin; j < ymax; j+=1.5) {
                     let z: number;
 
                     if(p < 0) {
@@ -129,7 +122,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
                     } else {
                         z = p/200.0
                     }
-                    
+
                     complex = {
                         x: 4.0 * (i - (window.innerWidth  /2.0)) / window.innerWidth,
                         y: 4.0 * (j - (window.innerHeight /2.0)) / window.innerHeight,
