@@ -195,8 +195,8 @@ const MathMandelbulb = (props: { active: boolean }) => {
         };
         function render() {
 
-            points.rotation.x += 0.01;
-            points.rotation.y += 0.01;
+            points.rotation.x += 0.002;
+            points.rotation.y += 0.002;
             renderer.render(scene, camera);
         }
         animate();
