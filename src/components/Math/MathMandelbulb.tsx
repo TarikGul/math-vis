@@ -35,7 +35,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
         new THREE.WebGLRenderer({ antialias: true })
     );
 
-    const [isOpened, setIsOpened] = useState<boolean>(false)
+    const [isOpened, setIsOpened] = useState<boolean>(false);
 
     useEffect(() => {
         if (props.active) {
@@ -64,7 +64,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
         for(let i = 0; i < 32; i++) {
             let r    : number,
                 theta: number,
-                phi  : number
+                phi  : number;
 
             r     = Math.sqrt(x*x + y*y + z*z);
             theta = Math.atan2(Math.sqrt(x*x + y*y), z);
@@ -81,6 +81,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
 
         let random = Math.floor(Math.random() * 80) + 40
 
+        // Random assortement of blue
         color.push(170);
         color.push(random);
         color.push(random);
@@ -88,7 +89,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
         return [color, n0 === 32]
     }
 
-    const mapMandelbulb = () => {
+    const mapMandelbulb = (): [number[], any[]] => {
         let complex : MBROT.MandelbulbComplexSet,
             curColor: string;
 
@@ -112,20 +113,18 @@ const MathMandelbulb = (props: { active: boolean }) => {
             xmin: number = (window.innerWidth  / 15),
             ymin: number = (window.innerHeight / 15);
         // let p = 50;
-        for (let p = -200; p < 200; p+=4) { // this is our z values
-            for (let i = xmin; i < xmax; i+=1.5) {
-                for(let j = ymin; j < ymax; j+=1.5) {
-                    let z: number;
+        for (let p = -200; p < 200; p+=10) { // this is our z values
 
-                    if(p < 0) {
-                        z = (p/200.0) * -1
-                    } else {
-                        z = p/200.0
-                    }
+            //Iterating through each pixel
+            for (let i = xmin; i < xmax; i+=2.6) { // original iterator i++
+                for (let j = ymin; j < ymax; j += 2.6) { // original iterator j++
+
+                    let z: number = p < 0 ? (p / 200.0) * -1 : p / 200.0;
 
                     complex = {
-                        x: 4.0 * (i - (window.innerWidth  /2.0)) / window.innerWidth,
-                        y: 4.0 * (j - (window.innerHeight /2.0)) / window.innerHeight,
+                        // Original multplication values x -> 4.0 y -> 4.0
+                        x: 3.0 * (i - (window.innerWidth  /2.0)) / window.innerWidth,
+                        y: 3.0 * (j - (window.innerHeight /2.0)) / window.innerHeight,
                         z: z
                     }
 
@@ -152,18 +151,15 @@ const MathMandelbulb = (props: { active: boolean }) => {
             scene   : any = sceRef.current,
             renderer: any = renRef.current,
             result  : any,
-            points  : any,
-            w       : number[];
+            points  : any;
         
-        let positions: number[] = [];
-        let colors   :    any[] = [];
         
         
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xB57C7C);
 
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 650;
+        camera.position.z = 550;
         
         const geometry = new THREE.BufferGeometry();
 
