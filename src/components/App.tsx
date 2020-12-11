@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { JSX } from '../types/AppTypes';
 
 import Console from './Console/Console';
 import Viewport from './Viewport/Viewport';
