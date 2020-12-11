@@ -45,9 +45,10 @@ I also need to at an 3D Orbit Trap that will allow for smoothh gradient coloring
 
 ![MandelBulb](./public/MandelBulb.gif)
 
-This second picture is me playing around with the naive approach and using the 2D slice method to produce a cloud like MandelBulb with a mirrored fractal.
+These two pictures below are examples of me playing around with my mandelbrot naive approach in order to get some sort of mirrored fractal pattern. The first picture shows a little clearer how the slices work. The Second one gives a cool look at the beautiful geometry. It can be tricky getting correct and visible enough slices across the x, and y as well, so in order to get it looking good 
 
 ![MandelBulbDisks](./public/MandelBulbDisks.gif)
+![MandelBulbMirror](./public/MandelBulbMirror.gif)
 
 ## Mandelbrot
 
