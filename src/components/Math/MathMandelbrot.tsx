@@ -67,7 +67,7 @@ const MathMandelbrot = (props: { active: boolean }) => {
         return [n, d <= 2]
     }   
 
-    const mapMandelbrot = () => {
+    const mapMandelbrot = (): [number[], any[]] => {
         let complex : MBROT.MandelbrotComplexSet,
             curColor: string;
 

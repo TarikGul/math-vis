@@ -79,7 +79,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
             if((x**2 + y**2 + z**2) > 2) break;
         }
 
-        let random = Math.floor(Math.random() * 80) + 40
+        let random: number = Math.floor(Math.random() * 80) + 40;
 
         // Random assortement of blue
         color.push(170);
@@ -150,51 +150,72 @@ const MathMandelbulb = (props: { active: boolean }) => {
         let camera  : any = camRef.current,
             scene   : any = sceRef.current,
             renderer: any = renRef.current,
-            result  : any,
             points  : any;
         
         
-        
+        // Init the scene
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xB57C7C);
 
+        // Setup camera -> Canvas
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 550;
         
+        // Init our buffer
         const geometry = new THREE.BufferGeometry();
 
-        result = mapMandelbulb();
+        // Retrieve our postions and colors
+        const mandelbulb: [number[], any[]] = mapMandelbulb();
+        const positions :  number[]         = mandelbulb[0];
+        const colors    :  number[]         = mandelbulb[1];
 
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(result[0], 3));
-        geometry.setAttribute('color', new THREE.Float32BufferAttribute(result[1], 3))
-        geometry.computeBoundingSphere();
-
+        // Init Aesthetics
         const material = new THREE.PointsMaterial({ size: 0.011, vertexColors: true });
-        const light = new THREE.AmbientLight(0x404040);
+        const light    = new THREE.AmbientLight(0x404040);
 
-        geometry.center()
+        // Store Buffer information
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
+        // Wrap up initializing geometrys and set reference
+        geometry.computeBoundingSphere();
+        geometry.center();
         geoRef.current = geometry;
 
+        // Wrap up initializing Points and set reference
         points = new THREE.Points(geometry, material);
-
         points.frustumCulled = false;
         poiRef.current = points;
+
+        // Init scene
         scene.add(light)
         scene.add(points);
 
+        // Init Renderer
         renderer = new THREE.WebGLRenderer({ antialias: false });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
+        // Create Canvas
         document.body.appendChild(renderer.domElement);
 
+        // Keeps canvas responsive
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+
+            camera.updateProjectionMatrix();
+        });
+
+        // This will be our animation frame function
         let animate = function () {
             reqRef.current = requestAnimationFrame(animate);
             render()
         };
+
         function render() {
 
+            // Rotate and Re-Render
             points.rotation.x += 0.002;
             points.rotation.y += 0.002;
             renderer.render(scene, camera);
