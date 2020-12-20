@@ -62,7 +62,7 @@ Need to add coloring to the fractals, and also considering doing a zoom animatio
 - Cayley Diagrams
 - Tropical Geometry
 - Julia Sets 3D/4D
-- Visualize a Cryptographic PROTOCOL(WOAHH right??)
+- Visualize a Cryptographic protocol
 
 ## Notes
 
