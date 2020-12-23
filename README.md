@@ -66,4 +66,4 @@ Need to add coloring to the fractals, and also considering doing a zoom animatio
 
 ## Notes
 
-All memory leaks associated with Three.js are taken care of. 
+All memory leaks associated with Three.js are taken care of.. 
