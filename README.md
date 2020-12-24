@@ -33,7 +33,7 @@ The first completed shape
 
 ## Mandelbulb
 
-Warning! Takes a lot of processing power. 
+Warning! Takes a lot of processing power!
 
 ### Insights
 
