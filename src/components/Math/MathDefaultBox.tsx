@@ -32,7 +32,7 @@ const MathDefaultBox = (props: { active: boolean }) => {
         }
     }, [props.active]);
 
-    const initViewPort = () => {
+    const initViewPort = (): void => {
         /**
          * TYPES
          * Need to abstract these and put them into a Types file
@@ -88,7 +88,7 @@ const MathDefaultBox = (props: { active: boolean }) => {
         animate();
     }
 
-    const cancelVis = () => {
+    const cancelVis = (): void => {
         if (isOpened) {
             // Stop requestAnimationFrame
             cancelAnimationFrame(reqRef.current);

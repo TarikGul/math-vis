@@ -87,7 +87,7 @@ const MathDonut = (props: { active: boolean }) => {
         return [positions, colors];
     }
 
-    const initViewport = () => {
+    const initViewport = (): void => {
         /**
          * TYPES
          */
@@ -183,7 +183,7 @@ const MathDonut = (props: { active: boolean }) => {
         })
     }
 
-    const cancelVis = () => {
+    const cancelVis = (): void => {
         if (isOpened) {
             // Stop requestAnimationFrame
             cancelAnimationFrame(reqRef.current);
