@@ -5,6 +5,7 @@ import MathDonut from '../Math/MathDonut';
 import MathDefaultBox from '../Math/MathDefaultBox';
 import MathMandelbulb from '../Math/MathMandelbulb';
 import MathMandelbrot from '../Math/MathMandelbrot';
+import MathMirroredMandelbulb from '../Math/MathMirrorMandelbulb';
 
 const Viewport = (props: {selectedVis: string}) => {
 
@@ -32,12 +33,17 @@ const Viewport = (props: {selectedVis: string}) => {
         return activeVis === 'mandelbrot';
     }
 
+    const MandelbulbMirrorActive = (activeVis: string) => {
+        return activeVis === 'mirrored-mandelbulb'
+    }
+    
     return (
         <div>
             <MathDefaultBox active={defaultActive(localState)}/>
             <MathDonut active={donutActive(localState)}/>
             <MathMandelbulb active={MandelbulbActive(localState)}/>
             <MathMandelbrot active={MandelbrotActive(localState)}/>
+            <MathMirroredMandelbulb active={MandelbulbMirrorActive(localState)}/>
         </div>
     )
 }
