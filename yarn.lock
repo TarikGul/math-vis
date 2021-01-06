@@ -1659,6 +1659,11 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/katex@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@types/katex/-/katex-0.11.0.tgz#b16c54ee670925ffef0616beae9e90c557e17334"
+  integrity sha512-27BfE8zASRLYfSBNMk5/+KIjr2CBBrH0i5lhsO04fca4TGirIIMay73v3zNkzqmsaeIa/Mi5kejWDcxPLAmkvA==
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -6937,6 +6942,13 @@ jsx-ast-utils@^2.4.1:
     array-includes "^3.1.1"
     object.assign "^4.1.1"
 
+katex@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.9.0.tgz#26a7d082c21d53725422d2d71da9b2d8455fbd4a"
+  integrity sha512-lp3x90LT1tDZBW2tjLheJ98wmRMRjUHwk4QpaswT9bhqoQZ+XA4cPcjcQBxgOQNwaOSt6ZeL/a6GKQ1of3LFxQ==
+  dependencies:
+    match-at "^0.1.1"
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -7257,6 +7269,11 @@ map-visit@^1.0.0:
   integrity sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
   dependencies:
     object-visit "^1.0.0"
+
+match-at@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/match-at/-/match-at-0.1.1.tgz#25d040d291777704d5e6556bbb79230ec2de0540"
+  integrity sha512-h4Yd392z9mST+dzc+yjuybOGFNOZjmXIPKWjxBd1Bb23r4SmDOsk2NYCU2BMUBGbSpZqwVsZYNq26QS3xfaT3Q==
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -9372,6 +9389,13 @@ react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-katex@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-katex/-/react-katex-2.0.2.tgz#0cb9559a4f30cb18f808006922b116c06e8b0ae9"
+  integrity sha512-mk1ezfUF4mBIstjvpfELf9g1rWF1Y1+idXMiOvkFvCLi0JFZDCQdui59VqQcI2ynOpb0jj52TM4kyBjKG+qEBg==
+  dependencies:
+    katex "^0.9.0"
 
 react-refresh@^0.8.3:
   version "0.8.3"
