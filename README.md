@@ -29,7 +29,7 @@ TODO Need to post the math used for this, and the references I used
 
 ![Torus](./public/Torus.gif)
 
-The first completed shape 
+The first completed shape. 
 
 ## Mandelbulb
 
