@@ -1,4 +1,4 @@
-# Welcome to this Math Visualizer
+# Welcome to this Math Visualizer!
 
 ## Tech
 
