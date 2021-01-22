@@ -14,7 +14,7 @@ Im using three.js instead of plain WEBGL because of the readabiity and documenta
 
 ## Setup
 
-Clone the repository
+Clone the repository..
 
     $cat tsconfig.json // Copy the output
     $rm -rf tsconfig.json
@@ -41,7 +41,7 @@ My current implementation is niave and was more of a brute force method of plott
 
 Now though, we are going to optimize this incredibly. Were going to strip some of the trignomic functions for more algebraic rotation implementations, and then we are also going to try to iterate through the sphere in linear time instead of n^4.
 
-I also need to at an 3D Orbit Trap that will allow for smoothh gradient coloring. 
+I also need to at an 3D Orbit Trap that will allow for smoothh gradient coloring.. 
 
 ![MandelBulb](./public/MandelBulb.gif)
 
