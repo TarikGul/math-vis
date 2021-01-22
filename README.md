@@ -14,7 +14,7 @@ Im using three.js instead of plain WEBGL because of the readabiity and documenta
 
 ## Setup
 
-Clone the repository..
+Clone the repository...
 
     $cat tsconfig.json // Copy the output
     $rm -rf tsconfig.json
