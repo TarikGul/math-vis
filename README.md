@@ -1,5 +1,9 @@
 # Welcome to this Math Visualizer!
 
+TODO:
+
+Create a Rust / Wasm pkg to run hi computation through.
+
 ## Tech
 
 - React
