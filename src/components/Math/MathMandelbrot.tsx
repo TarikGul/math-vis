@@ -4,7 +4,6 @@ import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 // Types 
 import * as MBROT from '../../types/MandelbrotTypes';
-import { HexBase64BinaryEncoding, HexBase64Latin1Encoding } from 'crypto';
 
 const MathMandelbrot = (props: { active: boolean }) => {
 
