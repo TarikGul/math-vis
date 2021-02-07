@@ -6,7 +6,13 @@ import 'katex/dist/katex.min.css';
 // @ts-ignore
 import { InlineMath, BlockMath } from 'react-katex';
 
-const styles = {
+/** @type {{search: React.CSSProperties}} */
+
+interface Styles {
+    function: React.CSSProperties;
+    italic: React.CSSProperties;
+}
+const styles: Styles = {
     function: {
         textAlign: 'center',
         margin: 15,

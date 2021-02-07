@@ -3,7 +3,15 @@ import ConsoleMandelbrot from './ConsoleMandelbrot';
 
 import '../../styles/Console.scss';
 
-const styles = {
+interface Styles {
+    menuIconContainer: React.CSSProperties;
+    consoleWrapper: React.CSSProperties;
+    openConsole: React.CSSProperties;
+    headerBar: React.CSSProperties;
+    button: React.CSSProperties;
+}
+
+const styles: Styles = {
     menuIconContainer: {
         display: 'inlineBlock',
         cursor: 'pointer',
@@ -64,12 +72,13 @@ const Console = (props: { setSelectedVis: any }) => {
         setIsOpen(!isOpen);
     }
 
-    const consoleDetail = (mathType: string) => {
+    const consoleDetail = (mathType: string): JSX.Element | undefined => {
         switch(mathType) {
             case 'mandelbrot':
                 return <ConsoleMandelbrot />
             default:
-                
+                // Explicitly returning undefined
+                return undefined
         }
     }
 
@@ -101,6 +110,7 @@ const Console = (props: { setSelectedVis: any }) => {
                     <option value='torus'>Torus</option>
                     <option value='mandelbulb'>Mandelbulb</option>
                     <option value='mandelbrot'>Mandelbrot</option>
+                    <option value='mirrored-mandelbulb'>Mirrored Mandelbulb</option>
                 </select>
             </div>
             {/* This is going to be the Main container for the Math info, and refernces */}
