@@ -164,9 +164,7 @@ const MathMandelbulb = (props: { active: boolean }) => {
         const geometry = new THREE.BufferGeometry();
 
         // Retrieve our postions and colors
-        const mandelbulb: [number[], any[]] = mapMandelbulb();
-        const positions :  number[]         = mandelbulb[0];
-        const colors    :  number[]         = mandelbulb[1];
+        const [positions, colors] = mapMandelbulb();
 
         // Init Aesthetics
         const material = new THREE.PointsMaterial({ size: 0.011, vertexColors: true });

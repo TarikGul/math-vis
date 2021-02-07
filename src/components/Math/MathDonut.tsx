@@ -108,9 +108,7 @@ const MathDonut = (props: { active: boolean }) => {
         const geometry = new THREE.BufferGeometry();
 
         // Retrive the positions and colors for the Buffer
-        const torus = calculateTorus();
-        const positions = torus[0];
-        const colors = torus[1];
+        const [positions, colors] = calculateTorus();
 
         // We initialize the first set of points and Alphas for the positions
         // We then update the points every animationFrame with updated lighting and points

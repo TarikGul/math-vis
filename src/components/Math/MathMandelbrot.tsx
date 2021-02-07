@@ -4,6 +4,7 @@ import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
 // Types 
 import * as MBROT from '../../types/MandelbrotTypes';
+import { HexBase64BinaryEncoding, HexBase64Latin1Encoding } from 'crypto';
 
 const MathMandelbrot = (props: { active: boolean }) => {
 
@@ -130,9 +131,7 @@ const MathMandelbrot = (props: { active: boolean }) => {
         const geometry = new THREE.BufferGeometry();
 
         // Retrieve positions and colors for Buffer
-        const mandelbrot = mapMandelbrot();
-        const positions  = mandelbrot[0];
-        const colors     = mandelbrot[1];
+        const [positions, colors] = mapMandelbrot();
 
         // Init Render Aesthetics
         const material = new THREE.PointsMaterial({ size: 1, vertexColors: true });
