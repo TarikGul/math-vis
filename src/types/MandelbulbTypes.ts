@@ -1,10 +1,10 @@
 export interface MandelbulbComplexSet {
-    x: number,
-    y: number,
-    z: number
-};
+    x: number;
+    y: number;
+    z: number;
+}
 
 export interface MandelbulbStartEnd {
-    start: number,
-    end: number
-};
+    start: number;
+    end: number;
+}

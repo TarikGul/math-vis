@@ -1,9 +1,9 @@
 export interface MandelbrotComplexSet {
-    x: number,
-    y: number
-};
+    x: number;
+    y: number;
+}
 
 export interface MandelbrotStartEnd {
-    start: number,
-    end  : number
-};
+    start: number;
+    end: number;
+}
