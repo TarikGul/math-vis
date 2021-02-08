@@ -32,17 +32,6 @@ const MathMandelbrot = (props: { active: boolean }) => {
 
     const [isOpened, setIsOpened] = useState<boolean>(false);
 
-    useEffect(() => {
-        if(props.active) {
-            setTimeout(() => {
-                setIsOpened(true)
-                initViewport();
-            }, 300);
-        } else {
-            cancelVis();
-        }
-    }, [props.active])
-
     const calculateMandelbrot = (c: MBROT.MandelbrotComplexSet) => {
         let z: MBROT.MandelbrotComplexSet = { x: 0, y: 0 }, 
             p: MBROT.MandelbrotComplexSet, 
@@ -192,6 +181,17 @@ const MathMandelbrot = (props: { active: boolean }) => {
             setIsOpened(false);
         }
     }
+
+    useEffect(() => {
+        if (props.active) {
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewport();
+            }, 300);
+        } else {
+            cancelVis();
+        }
+    }, [props.active]);
 
     return (
         <div>

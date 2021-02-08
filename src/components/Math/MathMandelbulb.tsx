@@ -36,17 +36,6 @@ const MathMandelbulb = (props: { active: boolean }) => {
 
     const [isOpened, setIsOpened] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (props.active) {
-            setTimeout(() => {
-                setIsOpened(true)
-                initViewport();
-            }, 300);
-        } else {
-            cancelVis();
-        }
-    }, [props.active]);
-
     const calculateMandlebulb = (pos: MBROT.MandelbulbComplexSet): [number[], boolean] => {
         let x0: number = pos.x, 
             y0: number = pos.y, 
@@ -245,6 +234,17 @@ const MathMandelbulb = (props: { active: boolean }) => {
             setIsOpened(false);
         }
     }
+
+    useEffect(() => {
+        if (props.active) {
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewport();
+            }, 300);
+        } else {
+            cancelVis();
+        }
+    }, [props.active]);
 
     return (
         <div ref={ctxRef}>

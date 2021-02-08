@@ -9,7 +9,6 @@ const MathDonut = (props: { active: boolean }) => {
 
     let R1: number = 1, 
         R2: number = 2, 
-        K1: number = 150, 
         K2: number = 7;
 
     // Used 
@@ -36,19 +35,9 @@ const MathDonut = (props: { active: boolean }) => {
     );
 
     const [isOpened, setIsOpened] = useState<boolean>(false);
+
     // Fun little idea to play around with
     const [breathingDonut, setIsBreathingDonut] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (props.active) {
-            setTimeout(() => {
-                setIsOpened(true)
-                initViewport();
-            }, 500);
-        } else {
-            cancelVis();
-        }
-    }, [props.active]);
 
     const calculateTorus = () => {
         // positions for the buffer
@@ -206,6 +195,17 @@ const MathDonut = (props: { active: boolean }) => {
             setIsOpened(false);
         }
     }
+
+    useEffect(() => {
+        if (props.active) {
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewport();
+            }, 500);
+        } else {
+            cancelVis();
+        }
+    }, [props.active]);
 
     return (
         <div ref={ctxRef}>

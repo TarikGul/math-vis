@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import * as THREE from 'three';
+import React, { useEffect, useState } from 'react';
 
 import MathDonut from '../Math/MathDonut';
 import MathDefaultBox from '../Math/MathDefaultBox';

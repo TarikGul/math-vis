@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { disposeHierarchy, disposeNode } from '../Util/garbageCollectNode';
 
@@ -20,17 +20,6 @@ const MathDefaultBox = (props: { active: boolean }) => {
     );
 
     const [isOpened, setIsOpened] = useState<boolean>(false)
-
-    useEffect(() => {
-        if (props.active) {
-            setTimeout(() => {
-                setIsOpened(true)
-                initViewPort();
-            }, 300);
-        } else {
-            cancelVis();
-        }
-    }, [props.active]);
 
     const initViewPort = (): void => {
         /**
@@ -113,6 +102,17 @@ const MathDefaultBox = (props: { active: boolean }) => {
             setIsOpened(false);
         }
     }
+
+    useEffect(() => {
+        if (props.active) {
+            setTimeout(() => {
+                setIsOpened(true)
+                initViewPort();
+            }, 300);
+        } else {
+            cancelVis();
+        }
+    }, [props.active]);
 
     return (
         <div ref={ctxRef}>
