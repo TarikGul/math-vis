@@ -12,6 +12,7 @@ interface Styles {
     function: React.CSSProperties;
     italic: React.CSSProperties;
 }
+
 const styles: Styles = {
     function: {
         textAlign: 'center',
