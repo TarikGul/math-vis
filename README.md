@@ -2,7 +2,7 @@
 
 TODO:
 
-Create a Rust / Wasm pkg to run hi computation through.
+Create a Rust / Wasm pkg to run hi computational functions.
 
 ## Tech
 
