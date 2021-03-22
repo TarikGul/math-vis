@@ -18,7 +18,7 @@ Im using three.js instead of plain WEBGL because of the readabiity and documenta
 
 ## Setup
 
-Clone the repository...
+Clone the repository....
 
     $git clone
     $yarn install
